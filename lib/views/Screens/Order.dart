@@ -141,7 +141,7 @@ class _OrderState extends State<Order> {
 
                         filled: true,
                         fillColor: Colors.white,
-                     //   hintText: 'Username',
+
                         contentPadding:
                         const EdgeInsets.symmetric(vertical: 40.0),
                         focusedBorder: OutlineInputBorder(
