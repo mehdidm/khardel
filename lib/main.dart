@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khardel/user/UserProfil.dart';
+import 'package:khardel/views/Screens/Home.dart';
+import 'package:khardel/views/Screens/Order.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
       primarySwatch: Colors.teal,
 
       ),
-      home:UserProfil(),
+      home:Home(),
     );
   }
 }
