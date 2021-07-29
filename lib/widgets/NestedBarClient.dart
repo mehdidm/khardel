@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:khardel/Constant.dart';
+import 'package:khardel/widgets/CardWidget.dart';
 import 'package:khardel/widgets/disabledinput.dart';
 
 class NestedTabBar extends StatefulWidget {
-
   @override
   _NestedTabBarState createState() => _NestedTabBarState();
 }
@@ -40,24 +40,20 @@ class _NestedTabBarState extends State<NestedTabBar>
           isScrollable: true,
           tabs: <Widget>[
             Container(
-              width: MediaQuery.of(context).size.width*0.3,
+              width: MediaQuery.of(context).size.width * 0.3,
               child: Tab(
                 child: Text(
-                  'معلومات شخصية',
-                  style: TextStyle(
-                      fontSize: 20
-                  ),
+                  'تاريخ',
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width*0.3,
+              width: MediaQuery.of(context).size.width * 0.3,
               child: Tab(
                 child: Text(
-                  'تاريخ',
-                  style: TextStyle(
-                    fontSize: 20
-                  ),
+                  'معلومات شخصية',
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
             ),
@@ -70,10 +66,14 @@ class _NestedTabBarState extends State<NestedTabBar>
             controller: _nestedTabController,
             children: <Widget>[
               Container(
-               /* decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: Colors.blueAccent,
-                ),*/
+                padding: EdgeInsets.only(top: 20),
+                child: Column(
+                  children: [
+                    CardOrder(),
+                  ],
+                ),
+              ),
+              Container(
                 child: Column(
                   children: [
                     DisabledInputBox(
@@ -97,13 +97,37 @@ class _NestedTabBarState extends State<NestedTabBar>
                       validate: false,
                       color: KBlue,
                     ),
+                    SizedBox(height: 15,),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: MediaQuery.of(context).size.width*0.5,
+                        height: MediaQuery.of(context).size.height*0.075,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: KMauve
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            Text(
+                              'خروج',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                    ),
                   ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: Colors.orangeAccent,
                 ),
               ),
             ],
@@ -113,97 +137,3 @@ class _NestedTabBarState extends State<NestedTabBar>
     );
   }
 }
-
-
-/*
-import 'package:flutter/material.dart';
-import 'package:khardel/Constant.dart';
-
-class NestedTabBar extends StatefulWidget {
-  const NestedTabBar({Key key}) : super(key: key);
-
-  @override
-  _NestedTabBarState createState() => _NestedTabBarState();
-}
-
-class _NestedTabBarState extends State<NestedTabBar> {
-
-  int _currentIndex = 0;
-
-  List<Widget> _tabList = [
-    Container(
-      color: Colors.teal,
-    ),
-    Container(
-      color: Colors.red,
-    ),
-    Container(
-      color: Colors.purple,
-    )
-
-  ];
-
-  TabController _nestedTabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _nestedTabController = new TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _nestedTabController.dispose();
-    super.dispose();
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TabBar(
-          unselectedLabelStyle: TextStyle(fontSize: 20),
-          indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(color: KBlue, width: 1),
-          ),
-          controller: _nestedTabController,
-          indicatorColor: KBlue,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white,
-          isScrollable: true,
-          labelStyle: TextStyle(
-            fontSize: 20,
-            color: Colors.black,
-          ),
-          tabs: <Widget>[
-            Tab(
-              text: "Détails",
-            ),
-            Tab(
-              text: "Historique réservation",
-            ),
-          ],
-        ),
-        SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: TabBarView(
-              controller: _nestedTabController,
-              children: [
-                Container(
-                  color: Colors.purple,
-                ),
-                Container(
-                  color: Colors.teal,
-                ),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
-  }
-}
-*/
