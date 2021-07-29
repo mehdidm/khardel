@@ -15,7 +15,7 @@ class _UserProfilState extends State<UserProfil> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+        padding: EdgeInsets.fromLTRB(20, 60, 20, 0),
         child: SingleChildScrollView(
           child: Column(
             children: [
