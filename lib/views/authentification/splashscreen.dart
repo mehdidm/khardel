@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khardel/Constant.dart';
-import 'package:khardel/authentification/SignIn.dart';
+import 'package:khardel/views/authentification/SignIn.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key key}) : super(key: key);

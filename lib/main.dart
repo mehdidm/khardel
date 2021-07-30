@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'get order/GetOrder.dart';
+import 'package:khardel/views/get%20order/GetOrder.dart';
 
 void main() {
   runApp(MyApp());

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:khardel/Constant.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:khardel/authentification/SignUp.dart';
+import 'package:khardel/views/authentification/SignUp.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key key}) : super(key: key);

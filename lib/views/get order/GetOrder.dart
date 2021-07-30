@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:khardel/widgets/GetOrderCard.dart';
 
-import '../Constant.dart';
+import '../../Constant.dart';
+
 
 class GetOrder extends StatefulWidget {
   const GetOrder({Key key}) : super(key: key);
