@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:khardel/views/Screens/Cart.dart';
 
 import 'package:khardel/views/Screens/Home.dart';
 import 'package:khardel/views/Screens/Order.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       primarySwatch: Colors.teal,
 
       ),
-      home:Home(),
+      home:Cart(),
     );
   }
 }
