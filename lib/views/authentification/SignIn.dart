@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:khardel/Constant.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:khardel/api/api.dart';
+import 'package:khardel/views/Screens/Home.dart';
 import 'package:khardel/views/authentification/SignUp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key key}) : super(key: key);
@@ -14,7 +19,11 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
 
   bool value = true;
-
+  TextEditingController NameController = TextEditingController();
+  TextEditingController mailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false;
+  String token;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +60,12 @@ class _SignInState extends State<SignIn> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.01,),
                   InputWidget(
+                    controller: NameController,
                     hint: 'اسم االمستخدم',
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.02,),
                   InputWidget(
+                    controller: passwordController,
                     hint: 'كلمه السر',
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.01,),
@@ -101,7 +112,8 @@ class _SignInState extends State<SignIn> {
                   Center(
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
+                        //Navigator.push(context, MaterialPageRoute(builder: (context) => Home(roles:b)));
+                        _login();
                       },
                       child: Container(
                         height: MediaQuery.of(context).size.height*0.075,
@@ -154,14 +166,49 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+
+  void _login() async{
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    var data = {
+      'username' : NameController.text,
+      'password' : passwordController.text
+    };
+
+    var res = await CallApi().postData(data, 'auth/signin');
+    var body = json.decode(res.body);
+    //if(body['status_code']==200){
+    // SharedPreferences localStorage = await SharedPreferences.getInstance();
+    // localStorage.setString('token', body['token']);
+    // token=body['token'];
+    print(body['roles']);
+    // localStorage.setString('user', json.decode(body['userData']));
+    // print(body['userData']);
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => Home(body['roles'])));
+    // }else{
+    //   print('error');
+    // }
+
+
+    setState(() {
+      _isLoading = false;
+    });
+
+  }
 }
 
 class InputWidget extends StatelessWidget {
 
   final String hint;
-
+final TextEditingController controller;
   const InputWidget({
-    Key key, this.hint,
+    Key key, this.hint,this.controller
   }) : super(key: key);
 
   @override
@@ -178,6 +225,7 @@ class InputWidget extends StatelessWidget {
         ),
         //SizedBox(height: 10,),
         TextField(
+          controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

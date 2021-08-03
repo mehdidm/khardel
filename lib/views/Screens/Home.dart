@@ -7,11 +7,22 @@ import 'package:khardel/views/widgets/ItemMenu.dart';
 import 'package:khardel/views/widgets/SearchField.dart';
 
 class Home extends StatefulWidget {
+  final List roles;
+  Home(this.roles);
   @override
   _HomeState createState() => _HomeState();
 }
 
+
+
 class _HomeState extends State<Home> {
+
+  @override
+  void initState() {
+    print(widget.roles[0]);
+    print(widget.roles[1]);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return  SafeArea(

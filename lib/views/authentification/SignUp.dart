@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:khardel/Constant.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:khardel/api/api.dart';
+import 'package:khardel/models/user.dart';
+import 'package:khardel/views/Screens/Home.dart';
 import 'package:khardel/views/authentification/SignIn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key key}) : super(key: key);
@@ -14,7 +20,11 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
 
   bool value = true;
-
+  TextEditingController NameController = TextEditingController();
+  TextEditingController mailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false;
+  String token;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,20 +62,28 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(height: MediaQuery.of(context).size.height*0.01,),
                   InputWidget(
                     hint: 'اسم االمستخدم',
+                    controller: NameController,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.015,),
                   InputWidget(
                     hint: 'البريد الإلكتروني',
+                    controller: mailController,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.015,),
                   InputWidget(
                     hint: 'كلمه السر',
+                    controller: passwordController,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.015,),
                   Center(
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                        setState(() {
+                          _handleLogin();
+
+                        });
+
+                        //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
                       },
                       child: Container(
                         height: MediaQuery.of(context).size.height*0.075,
@@ -118,14 +136,76 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+
+  void _handleLogin() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var data = {
+      'username' : NameController.text,
+      'email' : mailController.text,
+      'password' : passwordController.text,
+    };
+    print(NameController.text);
+    print(mailController.text);
+    print(passwordController.text);
+
+    var res = await CallApi().postData(data, 'auth/signup');
+    var body = json.decode(res.body);
+    print(body);
+    // if(body['Status']==200){
+    //
+    //   SharedPreferences localStorage = await SharedPreferences.getInstance();
+    //   localStorage.setString('token', body['token']);
+    //   token=body['token'];
+    //   //localStorage.setString('user', json.encode(body['user']));
+    //
+    //   Navigator.push(
+    //       context,
+    //       new MaterialPageRoute(
+    //           builder: (context) => Home()));
+    // }else {
+    //   showError(body['error']);
+    // }
+
+    //}
+
+
+
+
+    setState(() {
+      _isLoading = false;
+    });
+
+
+
+  }
+
+  showError(msg){
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('Done'),
+          content: Text(msg.toString()),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ));
+  }
 }
 
 class InputWidget extends StatelessWidget {
 
   final String hint;
-
+  final TextEditingController controller;
   const InputWidget({
     Key key, this.hint,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -142,6 +222,7 @@ class InputWidget extends StatelessWidget {
         ),
         //SizedBox(height: 10,),
         TextField(
+          controller: controller,
           decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:khardel/views/Screens/AddMenu.dart';
 
 import 'constant.dart';
 
@@ -22,15 +23,20 @@ class _BottomBarState extends State<BottomBar> {
            color: ColorMv,
            size: 30,
          ) ,
-         CircleAvatar(
+         GestureDetector(
+           onTap: (){
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>AddMenu()));
+           },
+           child: CircleAvatar(
        maxRadius: 25,
-             backgroundColor: ColorMv,
-             child:
-             Icon(
-               Icons.add ,
-               color: Colors.white,
-               size: 25,
-             )
+               backgroundColor: ColorMv,
+               child:
+               Icon(
+                 Icons.add ,
+                 color: Colors.white,
+                 size: 25,
+               )
+           ),
          ),
          Icon(
            Icons.shopping_cart ,

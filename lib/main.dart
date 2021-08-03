@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:khardel/services/categories.services.dart';
+import 'package:khardel/services/food.services.dart';
+import 'package:khardel/views/authentification/splashscreen.dart';
+import 'package:khardel/views/get%20order/GetOrder.dart';
 
-import 'package:khardel/views/Screens/Home.dart';
-import 'package:khardel/views/Screens/Order.dart';
 
+void setupLocator() {
+
+  GetIt.I.registerLazySingleton(() => CategoriesServices());
+  GetIt.I.registerLazySingleton(() => FoodsServices());
+
+}
 void main() {
+  setupLocator();
+
   runApp(MyApp());
 }
 
@@ -13,12 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Khardel',
-      theme: ThemeData(
-      primarySwatch: Colors.teal,
-
-      ),
-      home:Home(),
+      home: SplashScreen(),
     );
   }
 }
