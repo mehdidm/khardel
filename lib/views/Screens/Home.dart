@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "تربو",
+                          "الاعلانات",
                           textAlign: TextAlign.right,
                           style: TextStyle(
                               fontWeight: FontWeight.w400,
