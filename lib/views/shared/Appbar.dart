@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:khardel/views/user/UserProfil.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -10,7 +11,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
-
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Image.asset(
@@ -23,12 +23,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width * 0.4,
           ),
-          CircleAvatar(
-            radius: 30.0,
-            backgroundImage: AssetImage(
-              "assets/images/avatar.png",
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => UserProfil()));
+            },
+            child: CircleAvatar(
+              radius: 30.0,
+              backgroundImage: AssetImage(
+                "assets/images/avatar.png",
+              ),
+              backgroundColor: Colors.grey,
             ),
-            backgroundColor: Colors.grey,
           ),
         ],
       ),

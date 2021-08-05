@@ -1,16 +1,50 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:khardel/Constant.dart';
+import 'package:khardel/services/user.services.dart';
 import 'package:khardel/widgets/NestedBarClient.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfil extends StatefulWidget {
-  const UserProfil({Key key}) : super(key: key);
+
+  final int userID;
+  const UserProfil({Key key, this.userID}) : super(key: key);
 
   @override
   _UserProfilState createState() => _UserProfilState();
 }
 
 class _UserProfilState extends State<UserProfil> {
+
+  UserServices get userService=>GetIt.I<UserServices>();
+  bool _isLoading = false;
+  TextEditingController NameController = TextEditingController();
+  bool _isEnabled =false;
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+  var user;
+  int Id;
+  String errorMessage;
+
+  @override
+  void initState() {
+    setState(() {
+      _isLoading=true;
+    });
+    _getUserInfo();
+    super.initState();
+  }
+  void _getUserInfo() async {
+    SharedPreferences localStorage1 = await SharedPreferences.getInstance();
+    var userId = localStorage1.getInt('id');
+    print(userId);
+    setState(() {
+      user = userId;
+      _getUserProfile(user);
+      print(user);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,4 +94,28 @@ class _UserProfilState extends State<UserProfil> {
       ),
     );
   }
+
+  _getUserProfile(user)async{
+    setState(() {
+      _isLoading=true;
+    });
+    await userService.getUserProfile(user.toString()).then((response) {
+
+      if (response.error) {
+        errorMessage = response.errorMessage ?? 'An error occurred';
+      }
+      Id = response.data.id;
+      NameController.text=response.data.username;
+      print(response.data.username);
+      print(response.data.email);
+      print(response.data.id);
+      // _titleController.text = floor.nom;
+      // _contentController.text = note.noteContent;
+    });
+    setState(() {
+      _isLoading = false;
+    });
+
+  }
+
 }

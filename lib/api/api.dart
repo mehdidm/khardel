@@ -1,12 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
-//import 'package:http/http.dart' as http;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-import 'api_Response.dart';
 
 class CallApi {
   final String _url = 'https://khardel.herokuapp.com/api/';
