@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' show Client;
 import 'package:khardel/api/api_Response.dart';
 import 'package:khardel/models/category.dart';
-import 'package:khardel/models/food.dart';
+
 
 class CategoriesServices{
   Client client = Client();
