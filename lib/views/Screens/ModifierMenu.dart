@@ -9,18 +9,21 @@ import 'package:khardel/models/food.dart';
 import 'package:khardel/services/categories.services.dart';
 import 'package:khardel/services/food.services.dart';
 import 'package:khardel/views/shared/Appbar.dart';
-import 'package:khardel/views/shared/BottomBar.dart';
+
 import 'package:khardel/views/shared/constant.dart';
 
 class ModifierMenu extends StatefulWidget {
   final String id;
+
   ModifierMenu({this.id});
+
   @override
   _ModifierMenuState createState() => _ModifierMenuState();
 }
 
 class _ModifierMenuState extends State<ModifierMenu> {
   FoodsServices get foodService => GetIt.I<FoodsServices>();
+
   CategoriesServices get categoryService => GetIt.I<CategoriesServices>();
 
   bool _isLoading = false;
@@ -29,6 +32,7 @@ class _ModifierMenuState extends State<ModifierMenu> {
   TextEditingController descriptionController = TextEditingController();
   Food food = Food();
   String errorMessage;
+
   bool get isEditing => widget.id != null;
   final List<String> listCategory = [];
   final List listCategoryId = [];
@@ -50,7 +54,6 @@ class _ModifierMenuState extends State<ModifierMenu> {
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(),
-      bottomNavigationBar: BottomBar(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -237,9 +240,9 @@ class _ModifierMenuState extends State<ModifierMenu> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: ElevatedButton(
-                    onPressed: () async{
-                      final deleteResult = await foodService
-                          .deleteFood(widget.id.toString());
+                    onPressed: () async {
+                      final deleteResult =
+                          await foodService.deleteFood(widget.id.toString());
                     },
                     child: Icon(Icons.delete_outline),
                     style: ElevatedButton.styleFrom(
@@ -250,7 +253,6 @@ class _ModifierMenuState extends State<ModifierMenu> {
                 )
               ],
             ),
-
           ],
         ),
       ),
@@ -276,18 +278,20 @@ class _ModifierMenuState extends State<ModifierMenu> {
         descriptionController.text = food.description;
         priceController.text = food.price;
         points = int.parse(food.points);
-        category=food.category;
+        category = food.category;
       });
     }
   }
-_findSelectedCategory(){
-    for(int i=0 ;i<listCategory.length;i++ ){
-      if(listCategory[i]==category){
+
+  _findSelectedCategory() {
+    for (int i = 0; i < listCategory.length; i++) {
+      if (listCategory[i] == category) {
         print(i);
         return i;
       }
     }
-}
+  }
+
   _buildListCategoryWidgets() {
     return Container(
         height: MediaQuery.of(context).size.height * 0.07,
@@ -356,7 +360,7 @@ _findSelectedCategory(){
     });
   }
 
-  _updateFoodItem() async{
+  _updateFoodItem() async {
     setState(() {
       _isLoading = true;
     });
@@ -375,23 +379,23 @@ _findSelectedCategory(){
     });
 
     final title = 'Done';
-    final text = result.error ? (result.errorMessage ?? 'An error occurred') : 'Your event was updated';
+    final text = result.error
+        ? (result.errorMessage ?? 'An error occurred')
+        : 'Your event was updated';
 
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: Text(title),
-          content: Text(text),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        )
-    );
-
+              title: Text(title),
+              content: Text(text),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
   }
 }

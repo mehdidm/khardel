@@ -4,12 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:khardel/models/food.dart';
 import 'package:khardel/services/food.services.dart';
 import 'package:khardel/views/shared/Appbar.dart';
-import 'package:khardel/views/shared/BottomBar.dart';
+
 import 'package:khardel/views/shared/constant.dart';
 import 'package:khardel/views/widgets/ItemSup.dart';
 
 class Order extends StatefulWidget {
   final String id;
+
   Order({this.id});
 
   @override
@@ -25,6 +26,7 @@ class _OrderState extends State<Order> {
   TextEditingController descriptionController = TextEditingController();
   Food food = Food();
   String errorMessage;
+
   bool get isEditing => widget.id != null;
   int points = 0;
   var category;
@@ -42,7 +44,6 @@ class _OrderState extends State<Order> {
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(),
-        bottomNavigationBar: BottomBar(),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -74,7 +75,8 @@ class _OrderState extends State<Order> {
                             // SizedBox(
                             //   width: x * 0.02,
                             // ),
-                            Text(points.toString() +'points', style: TextStyle(fontSize: 25)),
+                            Text(points.toString() + 'points',
+                                style: TextStyle(fontSize: 25)),
                             // SizedBox(
                             //   width: x * 0.02,
                             // ),
@@ -103,8 +105,7 @@ class _OrderState extends State<Order> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            food.description,
+                          child: Text(food.description,
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w600)),
                         ),

@@ -7,7 +7,7 @@ import 'package:khardel/models/food.dart';
 import 'package:khardel/services/categories.services.dart';
 import 'package:khardel/services/food.services.dart';
 import 'package:khardel/views/shared/Appbar.dart';
-import 'package:khardel/views/shared/PersistentBottomBar.dart';
+
 import 'package:khardel/views/shared/constant.dart';
 
 import 'package:khardel/views/widgets/ItemCategorie.dart';
@@ -51,38 +51,7 @@ class _HomeState extends State<Home> {
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(),
-      bottomNavigationBar: BottomBar(
-        selectedIndex: currentIndex,
-        onItemSelected:(index){
-          setState(() {
-            currentIndex =index ;
-          });
-        } ,
-        items: [
-          PersistentBottomNavBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            title: "Home",
-            activeColorPrimary: ColorMv,
-            inactiveColorPrimary: Colors.grey,
-            inactiveColorSecondary: Colors.purple,
-          ),
-          PersistentBottomNavBarItem(
-            icon: Icon(Icons.home),
-            title: "Home",
-            activeColorPrimary: ColorMv,
-            inactiveColorPrimary: Colors.grey,
-            inactiveColorSecondary: Colors.purple,
-          ),
-          PersistentBottomNavBarItem(
 
-            icon: Icon(Icons.shopping_cart_outlined),
-            title: "Home",
-            activeColorPrimary: ColorMv,
-            inactiveColorPrimary: Colors.grey,
-            inactiveColorSecondary: Colors.purple,
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
