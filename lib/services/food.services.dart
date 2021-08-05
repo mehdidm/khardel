@@ -30,7 +30,20 @@ class FoodsServices{
     }).catchError((_) => APIResponse<List<Food>>(
         error: true, errorMessage: 'An error occured'));
   }
-
+  Future<APIResponse<Food>> getFood(String Id) {
+    return client
+        .get(
+      Uri.parse(API + '/' + Id),
+    )
+        .then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+        return APIResponse<Food>(data: Food.fromJson(jsonData));
+      }
+      return APIResponse<Food>(error: true, errorMessage: 'An error occured');
+    }).catchError((_) =>
+        APIResponse<Food>(error: true, errorMessage: 'An error occured'));
+  }
   Future<APIResponse<bool>> addFood(Food item) {
     return client
         .post(Uri.parse(API + '/'),

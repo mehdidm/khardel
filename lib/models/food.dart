@@ -6,8 +6,8 @@ class Food {
   String description;
   String price;
   bool available;
-  Category category;
-  int points;
+  var category;
+  String points;
 
   Food(
       {this.id,
@@ -20,7 +20,7 @@ class Food {
 
   Map<String, dynamic> toJson() {
     return {
-      "_id": id,
+      //"_id": id,
       "description": description,
       "title": title,
       "points": points,

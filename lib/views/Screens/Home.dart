@@ -1,5 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:khardel/api/api_Response.dart';
+import 'package:khardel/models/category.dart';
+import 'package:khardel/models/food.dart';
+import 'package:khardel/services/categories.services.dart';
+import 'package:khardel/services/food.services.dart';
 import 'package:khardel/views/shared/Appbar.dart';
 import 'package:khardel/views/shared/BottomBar.dart';
 import 'package:khardel/views/widgets/ItemCategorie.dart';
@@ -16,11 +22,19 @@ class Home extends StatefulWidget {
 
 
 class _HomeState extends State<Home> {
+  CategoriesServices get categoryService => GetIt.I<CategoriesServices>();
+  FoodsServices get foodService => GetIt.I<FoodsServices>();
+  bool _isLoading = false;
+  final List<String> listCategory = [];
+  final List<Food> listFood = [];
+  final List listCategoryId = [];
+  APIResponse<List<Category>> _categoryResponse;
+  APIResponse<List<Food>> _foodResponse;
 
   @override
   void initState() {
-    print(widget.roles[0]);
-    print(widget.roles[1]);
+_fetchCategories();
+_fetchFoods();
     super.initState();
   }
   @override
@@ -85,26 +99,7 @@ class _HomeState extends State<Home> {
                     TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   ),
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                    children: [
-                      ItemCat(
-                        title: "تربو",
-                        image: 'assets/images/burger.png',
-                      ),
-
-                      ItemCat(
-                        title: "تربو",
-                        image: 'assets/images/burger.png',
-                      ),
-
-
-                    ],
-                  ),
-                ),
+                _buildListCategoriesWidgets(),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 10, horizontal: 20),
@@ -114,34 +109,7 @@ class _HomeState extends State<Home> {
                     TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   ),
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ItemMenu(
-                        title: "تربو",
-                        price: "8 شيكل",
-                        image: "assets/images/sandwich.png",
-                      ),
-                      ItemMenu(
-                        title: "تربو",
-                        price: "8 شيكل",
-                        image: "assets/images/sandwich.png",
-                      ),
-                      ItemMenu(
-                        title: "تربو",
-                        price: "8 شيكل",
-                        image: "assets/images/sandwich.png",
-                      ),
-                      ItemMenu(
-                        title: "تربو",
-                        price: "8 شيكل",
-                        image: "assets/images/sandwich.png",
-                      ),
-                    ],
-                  ),
-                ),
+                myWidget(context),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[],
@@ -152,5 +120,134 @@ class _HomeState extends State<Home> {
         ),
       )
     );
+  }
+  _buildListCategoriesWidgets(){
+    return
+    Container(
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        // Let the ListView know how many items it needs to build.
+        itemCount: listCategory.length,
+        // Provide a builder function. This is where the magic happens.
+        // Convert each item into a widget based on the type of item it is.
+        itemBuilder: (context, index) {
+
+          return  ItemCat(
+            title: listCategory[index],
+            image: 'assets/images/burger.png',
+          );
+        },
+      ),
+    );
+  }
+  _fetchCategories() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    _categoryResponse = await categoryService
+        .getAllCategories();
+    _buildListCategories();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _buildListCategories() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    for (int i = 0; i < _categoryResponse.data.length; i++) {
+
+      listCategory.add(_categoryResponse.data[i].name);
+      listCategoryId.add(_categoryResponse.data[i].id);
+    }
+    print(listCategory);
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+
+  _buildListFoodsWidgets(){
+    return
+      Container(
+        height: 1000,
+        child: GridView.builder(
+          scrollDirection: Axis.horizontal,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+          ),
+          // Let the ListView know how many items it needs to build.
+          itemCount: listFood.length,
+          // Provide a builder function. This is where the magic happens.
+          // Convert each item into a widget based on the type of item it is.
+          itemBuilder: (context, index) {
+
+            return  ItemMenu(
+              title: listFood[index].title,
+              price: "${listFood[index].price} شيكل",
+              image: "assets/images/sandwich.png",
+            );
+          },
+        ),
+      );
+  }
+
+  Widget myWidget(BuildContext context) {
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: Container(
+        height: 1000,
+        child: GridView.builder(
+
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 20,
+            ),
+            itemCount: listFood.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ItemMenu(
+                id: listFood[index].id,
+                title: listFood[index].title,
+                price: "${listFood[index].price} شيكل",
+                image: "assets/images/sandwich.png",
+              );
+            }
+        ),
+      ),
+    );
+  }
+  _fetchFoods() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    _foodResponse = await foodService
+        .getAllFood();
+    _buildListFoods();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _buildListFoods() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    for (int i = 0; i < _foodResponse.data.length; i++) {
+
+      listFood.add(_foodResponse.data[i]);
+      //listCategoryId.add(_categoryResponse.data[i].id);
+    }
+    print(listFood);
+    setState(() {
+      _isLoading = false;
+    });
   }
 }
