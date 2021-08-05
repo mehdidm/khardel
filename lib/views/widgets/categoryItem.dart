@@ -30,6 +30,7 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
       onSelected: (isSelected) {
         setState(() {
           _isSelected = isSelected;
+          return widget.chipName;
         });
       },
       selectedColor: Color(0xffeadffd),

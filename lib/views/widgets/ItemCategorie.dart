@@ -52,7 +52,7 @@ class _ItemCatState extends State<ItemCat> {
             widget.title,
             textAlign: TextAlign.right,
             style: TextStyle(
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.bold,
                 fontSize: 15
             ),
           )

@@ -1,9 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:group_button/group_button.dart';
+import 'package:http/http.dart';
+import 'package:khardel/Constant.dart';
+import 'package:khardel/api/api.dart';
 import 'package:khardel/api/api_Response.dart';
 import 'package:khardel/models/category.dart';
+import 'package:khardel/models/food.dart';
 import 'package:khardel/services/categories.services.dart';
+import 'package:khardel/services/food.services.dart';
 import 'package:khardel/views/shared/Appbar.dart';
 import 'package:khardel/views/shared/BottomBar.dart';
 import 'package:khardel/views/shared/constant.dart';
@@ -17,9 +25,16 @@ class AddMenu extends StatefulWidget {
 class _AddMenuState extends State<AddMenu> {
 
   CategoriesServices get categoryService => GetIt.I<CategoriesServices>();
+  FoodsServices get foodService => GetIt.I<FoodsServices>();
  bool _isLoading = false;
   APIResponse<List<Category>> _categoryResponse;
+  TextEditingController titleController=TextEditingController();
+  TextEditingController priceController=TextEditingController();
+  TextEditingController descriptionController=TextEditingController();
   final List<String> listCategory = [];
+  final List listCategoryId = [];
+  int points =0;
+  var category;
 @override
   void initState() {
 _fetchCategories();
@@ -54,6 +69,7 @@ super.initState();
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                     child: TextField(
+                      controller: titleController,
                       autofocus: false,
                       style:
                           TextStyle(fontSize: 22.0, color: Color(0xFFbdc6cf)),
@@ -90,6 +106,7 @@ super.initState();
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                     child: TextField(
+                      controller: priceController,
                       autofocus: false,
                       style:
                           TextStyle(fontSize: 22.0, color: Color(0xFFbdc6cf)),
@@ -125,22 +142,37 @@ super.initState();
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.remove_circle_outline_sharp,
-                        size: 30,
-                        color: ColorBlue,
+                      GestureDetector(
+                        child: Icon(
+                          Icons.remove_circle_outline_sharp,
+                          size: 30,
+                          color: ColorBlue,
+                        ),
+                        onTap: (){
+                          setState(() {
+                            points--;
+                          });
+                        },
                       ),
                       SizedBox(
                         width: x * 0.02,
                       ),
-                      Text("5", style: TextStyle(fontSize: 25 ,color: ColorBlue)),
+                      Text(points.toString(), style: TextStyle(fontSize: 25 ,color: ColorBlue)),
                       SizedBox(
                         width: x * 0.02,
                       ),
-                      Icon(
-                        Icons.add_circle_outline,
-                        size: 30,
-                        color: ColorBlue,
+                      GestureDetector(
+                        child: Icon(
+                          Icons.add_circle_outline,
+                          size: 30,
+                          color: ColorBlue,
+                        ),
+                        onTap: (){
+                          setState(() {
+                            points++;
+                          });
+
+                        },
                       )
                     ],
                   ),
@@ -199,6 +231,7 @@ super.initState();
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                     child: TextField(
+                      controller: descriptionController,
                       autofocus: false,
                       style:
                           TextStyle(fontSize: 22.0, color: Color(0xFFbdc6cf)),
@@ -225,7 +258,8 @@ super.initState();
               padding: const EdgeInsets.only(top: 20.0),
               child: ElevatedButton(
                 onPressed: () {
-                  _fetchCategories();
+                 // makePostRequest();
+                  _addItem();
                 },
                 child: Icon(Icons.check),
                 style: ElevatedButton.styleFrom(
@@ -242,23 +276,41 @@ super.initState();
 
   _buildListCategoryWidgets(){
     return Container(
-      height: MediaQuery.of(context).size.height*0.1,
+      height: MediaQuery.of(context).size.height*0.07,
       //width: MediaQuery.of(context).size.width*0.2,
-      child: ListView.builder(
+      child: ListView(
         scrollDirection: Axis.horizontal,
-        // Let the ListView know how many items it needs to build.
-        itemCount: _categoryResponse.data.length,
-        // Provide a builder function. This is where the magic happens.
-        // Convert each item into a widget based on the type of item it is.
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: FilterChipWidget(
-              chipName: _categoryResponse.data[index].name,
+        children: [
+          GroupButton(
+            spacing: 5,
+            buttonHeight: 50,
+            isRadio: true,
+            direction: Axis.horizontal,
+            onSelected: (index, isSelected) {
+              print(
+                  '$index button is ${isSelected ? 'selected' : 'unselected'}');
+              category = listCategoryId[index];
+            } ,
+            buttons:listCategory,
+           // selectedButtons: [0, 1], /// [List<int>] after 2.2.1 version
+            selectedTextStyle: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: KMauve,
             ),
-          );
-        },
-      ),
+            unselectedTextStyle: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: KBlue,
+            ),
+            selectedColor:Color(0xffeadffd),
+            unselectedColor:Color(0xffededed),
+            //selectedBorderColor: KMauve,
+            //unselectedBorderColor: Colors.grey[500],
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+        ],
+      )
     );
   }
 
@@ -281,15 +333,32 @@ super.initState();
     });
 
     for (int i = 0; i < _categoryResponse.data.length; i++) {
-      if (listCategory.contains(_categoryResponse.data[i].name)) {
-        i++;
-      } else {
+
         listCategory.add(_categoryResponse.data[i].name);
-      }
+        listCategoryId.add(_categoryResponse.data[i].id);
     }
     print(listCategory);
     setState(() {
       _isLoading = false;
     });
   }
+  _addItem() async{
+    setState(() {
+      _isLoading = true;
+    });
+    final item=Food(
+        title:titleController.text,
+        description:descriptionController.text ,
+        price: priceController.text,
+        category:category,
+        points:points.toString(),
+    available:true
+    );
+    final result = await foodService.addFood(item);
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+
 }
