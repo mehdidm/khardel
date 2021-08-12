@@ -3,8 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:khardel/api/api_Response.dart';
+import 'package:khardel/models/food.dart';
 import 'package:khardel/models/order.dart';
+import 'package:khardel/models/orderItem.dart';
+import 'package:khardel/models/supplement.dart';
+import 'package:khardel/services/food.services.dart';
 import 'package:khardel/services/order.services.dart';
+import 'package:khardel/services/orderItem.services.dart';
+import 'package:khardel/services/supplement.services.dart';
 import 'package:khardel/widgets/GetOrderCard.dart';
 import 'package:http/http.dart' as http;
 import '../../Constant.dart';
@@ -20,13 +26,19 @@ class GetOrder extends StatefulWidget {
 class _GetOrderState extends State<GetOrder> {
 
   OrderServices get orderService => GetIt.I<OrderServices>();
+  OrderItemServices get orderItemService => GetIt.I<OrderItemServices>();
+  FoodsServices get foodService => GetIt.I<FoodsServices>();
+  SupplementServices get supplementService => GetIt.I<SupplementServices>();
   bool _isLoading = false;
   final List<Order> listOrders = [];
+  final List<OrderItem> listOrderItems = [];
+  final List<Supplement> listSupplements = [];
+  final Food food=Food();
   APIResponse<List<Order>> _orderResponse;
 
   @override
   void initState() {
-    //_fetchCategories();
+    _fetchCategories();
     super.initState();
   }
   @override
@@ -59,7 +71,7 @@ class _GetOrderState extends State<GetOrder> {
                   ),
                 ),
               ),
-              _buildListCategoriesWidgets(),
+              //_buildListCategoriesWidgets(),
             ],
           ),
         ),
@@ -114,6 +126,7 @@ class _GetOrderState extends State<GetOrder> {
     });
 
     for (int i = 0; i < _orderResponse.data.length; i++) {
+      print(_orderResponse.data[i].orderItems);
       listOrders.add(_orderResponse.data[i]);
     }
     print(listOrders);
@@ -121,4 +134,29 @@ class _GetOrderState extends State<GetOrder> {
       _isLoading = false;
     });
   }
-}
+
+  _buildListOrderItems(){
+    for(int i=0;i<listOrders.length;i++){
+      var orderItems = [];
+      orderItems=listOrders[i].orderItems;
+      for(int j =0; j <orderItems.length;j++){
+         orderItemService.getOrderItem(orderItems[j].toString()).then((value) {
+           OrderItem orderItem=value.data;
+           listOrderItems.add(orderItem);
+           print(listOrderItems.length);
+         });
+      }
+    }
+  }
+
+  _getFood(){
+    for(int i=0;i<listOrderItems.length;i++){
+        foodService.getFood(listOrderItems[i].food.toString()).then((value) {
+          Food food=value.data;
+          print(food);
+        });
+      }
+    }
+
+  }
+
