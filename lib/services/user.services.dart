@@ -4,12 +4,12 @@ import 'package:khardel/api/api_Response.dart';
 import 'package:khardel/models/user.dart';
 
 class UserServices {
-  static const API = 'https://khardel.herokuapp.com/api/auth';
+  static const API = 'https://khardel.herokuapp.com/api/';
 
   Future<APIResponse<User>> getUserProfile(String userId) {
     return http
         .get(
-      Uri.parse(API + 'users/' + userId),
+      Uri.parse(API + 'user/' + userId),
     )
         .then((data) {
       if (data.statusCode == 200) {

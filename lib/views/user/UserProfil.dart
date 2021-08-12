@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:khardel/Constant.dart';
+import 'package:khardel/models/user.dart';
 import 'package:khardel/services/user.services.dart';
 import 'package:khardel/widgets/NestedBarClient.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class UserProfil extends StatefulWidget {
 
@@ -36,7 +40,7 @@ class _UserProfilState extends State<UserProfil> {
   }
   void _getUserInfo() async {
     SharedPreferences localStorage1 = await SharedPreferences.getInstance();
-    var userId = localStorage1.getInt('id');
+    var userId = localStorage1.getString('id');
     print(userId);
     setState(() {
       user = userId;
@@ -96,15 +100,11 @@ class _UserProfilState extends State<UserProfil> {
   }
 
   _getUserProfile(user)async{
-    setState(() {
-      _isLoading=true;
-    });
     await userService.getUserProfile(user.toString()).then((response) {
 
       if (response.error) {
         errorMessage = response.errorMessage ?? 'An error occurred';
       }
-      Id = response.data.id;
       NameController.text=response.data.username;
       print(response.data.username);
       print(response.data.email);
@@ -112,9 +112,7 @@ class _UserProfilState extends State<UserProfil> {
       // _titleController.text = floor.nom;
       // _contentController.text = note.noteContent;
     });
-    setState(() {
-      _isLoading = false;
-    });
+
 
   }
 

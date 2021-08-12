@@ -18,9 +18,7 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'Cart.dart';
 
 class Home extends StatefulWidget {
-  final List roles;
 
-  Home(this.roles);
 
   @override
   _HomeState createState() => _HomeState();

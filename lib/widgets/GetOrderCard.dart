@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import '../Constant.dart';
 
 class GetOrderCard extends StatefulWidget {
-  const GetOrderCard({Key key}) : super(key: key);
+  final String title;
+  final String supplement;
+  final String other;
+  final String orderItems;
+  final bool delivery;
+  final bool done;
+  const GetOrderCard({this.title,this.supplement,this.orderItems,this.other,this.done,this.delivery});
 
   @override
   _GetOrderCardState createState() => _GetOrderCardState();

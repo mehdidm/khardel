@@ -5,7 +5,7 @@ class User {
   String username;
   String email;
   String password;
- String  role;
+ List<String> role;
 
   User(
       {this.id,
@@ -30,7 +30,7 @@ class User {
       username: item['username'],
       email: item['email'],
       password: item['password'],
-      role: item['roles'] as String,
+      role: item['roles'].cast<String>(),
     );
   }
 }

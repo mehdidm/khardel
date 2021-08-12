@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:khardel/Constant.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:khardel/api/api.dart';
+import 'package:khardel/models/user.dart';
+import 'package:khardel/views/Screens/Acceuil.dart';
 import 'package:khardel/views/Screens/Home.dart';
 import 'package:khardel/views/authentification/SignUp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -180,17 +182,27 @@ class _SignInState extends State<SignIn> {
 
     var res = await CallApi().postData(data, 'auth/signin');
     var body = json.decode(res.body);
-    //if(body['status_code']==200){
-    // SharedPreferences localStorage = await SharedPreferences.getInstance();
-    // localStorage.setString('token', body['token']);
-    // token=body['token'];
-    print(body['roles']);
-    // localStorage.setString('user', json.decode(body['userData']));
-    // print(body['userData']);
+    //if(res.hashCode==200){
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.setString('token', body['accessToken']);
+    token=body['accessToken'];
+    print(body);
+    print(token);
+    // final User user= User(
+    //   id: body['_id'],
+    //   username: body['username'],
+    //   email: body['email'],
+    //   password: body['password'],
+    //   role: body['roles']
+    // );
+    localStorage.setString('username', body['username']);
+    localStorage.setString('email', body['email']);
+    localStorage.setStringList('roles', body['roles'].cast<String>());
+    localStorage.setString('id',body['id']);
     Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (context) => Home(body['roles'])));
+            builder: (context) => Acceuil()));
     // }else{
     //   print('error');
     // }

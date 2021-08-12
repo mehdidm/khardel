@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:khardel/api/api_Response.dart';
 import 'package:khardel/models/food.dart';
+import 'package:khardel/models/orderItem.dart';
+import 'package:khardel/models/supplement.dart';
 import 'package:khardel/services/food.services.dart';
+import 'package:khardel/services/orderItem.services.dart';
+import 'package:khardel/services/supplement.services.dart';
 import 'package:khardel/views/shared/Appbar.dart';
-
 import 'package:khardel/views/shared/constant.dart';
 import 'package:khardel/views/widgets/ItemSup.dart';
 
@@ -19,13 +23,21 @@ class Order extends StatefulWidget {
 
 class _OrderState extends State<Order> {
   FoodsServices get foodService => GetIt.I<FoodsServices>();
+ SupplementServices get categoryService => GetIt.I<SupplementServices>();
+ OrderItemServices get orderItemService => GetIt.I<OrderItemServices>();
+  final List<String> listSupplement = [];
+  final List<String> listSupplementID = [];
+  final List<String> selectedSupplementID = [];
+  APIResponse<List<Supplement>> _supplementResponse;
 
   bool _isLoading = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController otherController = TextEditingController();
   Food food = Food();
   String errorMessage;
+  Color color = Colorbg ;
 
   bool get isEditing => widget.id != null;
   int points = 0;
@@ -34,6 +46,7 @@ class _OrderState extends State<Order> {
   @override
   void initState() {
     _getFoodItem();
+    _fetchSupplements();
     super.initState();
   }
 
@@ -55,13 +68,16 @@ class _OrderState extends State<Order> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 18.0),
-                child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20))),
-                    color: Colorbg,
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: Container(
+                 // height: MediaQuery.of(context).size.height*0.65,
+                  decoration: BoxDecoration(
+
+                    color: Color(0xffF1f1f1),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 20),
                     child: Column(
                       children: [
                         Row(
@@ -123,29 +139,30 @@ class _OrderState extends State<Order> {
                             ),
                           ),
                         ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ItemSup(
-                                image: "assets/images/cheese.png",
-                              ),
-                              ItemSup(
-                                image: "assets/images/salade.png",
-                              ),
-                              ItemSup(
-                                image: "assets/images/soda.png",
-                              ),
-                              ItemSup(
-                                image: "assets/images/salade.png",
-                              ),
-                              ItemSup(
-                                image: "assets/images/soda.png",
-                              ),
-                            ],
-                          ),
-                        ),
+                        // SingleChildScrollView(
+                        //   scrollDirection: Axis.horizontal,
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       ItemSup(
+                        //         image: "assets/images/cheese.png",
+                        //       ),
+                        //       ItemSup(
+                        //         image: "assets/images/salade.png",
+                        //       ),
+                        //       ItemSup(
+                        //         image: "assets/images/soda.png",
+                        //       ),
+                        //       ItemSup(
+                        //         image: "assets/images/salade.png",
+                        //       ),
+                        //       ItemSup(
+                        //         image: "assets/images/soda.png",
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        _buildListCategoriesWidgets(),
                         SizedBox(
                           height: 5,
                         ),
@@ -167,6 +184,7 @@ class _OrderState extends State<Order> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 0, horizontal: 15),
                           child: TextField(
+                            controller: otherController,
                             autofocus: false,
                             style: TextStyle(
                                 fontSize: 22.0, color: Color(0xFFbdc6cf)),
@@ -189,7 +207,9 @@ class _OrderState extends State<Order> {
                         Padding(
                           padding: const EdgeInsets.only(top: 20.0),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _addItem();
+                            },
                             child: Text(
                               'أطلب',
                               textAlign: TextAlign.center,
@@ -201,7 +221,9 @@ class _OrderState extends State<Order> {
                           ),
                         )
                       ],
-                    )),
+                    ),
+                  ),
+                ),
               )
             ],
           ),
@@ -232,5 +254,74 @@ class _OrderState extends State<Order> {
         category = food.category;
       });
     }
+  }
+  _buildListCategoriesWidgets() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        // Let the ListView know how many items it needs to build.
+        itemCount: listSupplement.length,
+        // Provide a builder function. This is where the magic happens.
+        // Convert each item into a widget based on the type of item it is.
+        itemBuilder: (context, index) {
+
+          return  ItemSup(
+            title: listSupplement[index],
+            image: "assets/images/cheese.png",
+          );
+        },
+      ),
+    );
+  }
+
+
+  _fetchSupplements() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    _supplementResponse = await categoryService
+        .getAllSupplements();
+    _buildListSupplements();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _buildListSupplements() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    for (int i = 0; i < _supplementResponse.data.length; i++) {
+
+      listSupplement.add(_supplementResponse.data[i].title);
+      //listSupplementID.add(_supplementResponse.data[i].id.toString());
+    }
+    print(listSupplement);
+    print(listSupplementID);
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _addItem() async{
+    setState(() {
+      _isLoading = true;
+    });
+    final item=OrderItem(
+     userId: '60f89ad57ceda214d885fdb7',
+        supplements: listSupplement,
+      food: food.id,
+      other:otherController.text ,
+      quantity: 3,
+    );
+    print(listSupplement);
+    final result = await orderItemService.addOrderItem(item);
+    print(result);
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

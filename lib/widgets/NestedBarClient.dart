@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:khardel/Constant.dart';
 import 'package:khardel/models/user.dart';
 import 'package:khardel/services/user.services.dart';
+import 'package:khardel/views/authentification/SignIn.dart';
 import 'package:khardel/widgets/CardWidget.dart';
 import 'package:khardel/widgets/disabledinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +26,7 @@ class _NestedTabBarState extends State<NestedTabBar>
   // bool get isEditing => widget.userId != null;
   String errorMessage;
   var user;
-  User userData;
+ // User userData;
   int Id;
   bool _validate = false;
 
@@ -37,21 +38,19 @@ class _NestedTabBarState extends State<NestedTabBar>
     });
     _getUserInfo();
     // NameController.text=userData.username;
-    // phoneController.text=userData.phone;
-    // mailController.text=userData.email;
+
+    //mailController.text=userData.email;
     super.initState();
     _nestedTabController = new TabController(length: 2, vsync: this);
   }
 
   void _getUserInfo() async {
     SharedPreferences localStorage1 = await SharedPreferences.getInstance();
-    var userId = localStorage1.getInt('id');
-    print(userId);
-    setState(() {
-      user = userId;
-      _getUserProfile(user);
-      print(user);
-    });
+    var username = localStorage1.getString('username');
+    var email = localStorage1.getString('email');
+    print(username);
+    UserNameController.text=username.toString();
+    mailController.text=email.toString();
   }
 
   @override
@@ -113,14 +112,14 @@ class _NestedTabBarState extends State<NestedTabBar>
                     DisabledInputBox(
                       enabled: false,
                       inputHint: UserNameController.text,
-                      controller: _controller,
+                      controller: UserNameController,
                       validate: false,
                       color: KBlue,
                     ),
                     DisabledInputBox(
                       enabled: false,
                       inputHint: mailController.text,
-                      controller: _controller,
+                      controller: mailController,
                       validate: false,
                       color: KBlue,
                     ),
@@ -133,7 +132,18 @@ class _NestedTabBarState extends State<NestedTabBar>
                     ),
                     SizedBox(height: 15,),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: ()async {
+                        // logout from the server ...
+                        // var res = await CallApi().getData('logout');
+                        //var body = json.decode(res.body);
+                        //if(body['success']){
+                        SharedPreferences localStorage = await SharedPreferences
+                            .getInstance();
+                        localStorage.remove('token');
+                        Navigator.push(
+                            context, new MaterialPageRoute(builder: (context) =>
+                            SignIn()));
+                      },
                       child: Container(
                         width: MediaQuery.of(context).size.width*0.5,
                         height: MediaQuery.of(context).size.height*0.075,
@@ -180,7 +190,6 @@ class _NestedTabBarState extends State<NestedTabBar>
       if (response.error) {
         errorMessage = response.errorMessage ?? 'An error occurred';
       }
-      Id = response.data.id;
       UserNameController.text = response.data.username;
       mailController.text = response.data.email;
       print(response.data.username);
