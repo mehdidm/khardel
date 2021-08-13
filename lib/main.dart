@@ -10,6 +10,7 @@ import 'package:khardel/services/supplement.services.dart';
 import 'package:khardel/services/user.services.dart';
 import 'package:khardel/views/Screens/Acceuil.dart';
 import 'package:khardel/views/Screens/Home.dart';
+import 'package:khardel/views/Screens/ListOrder.dart';
 import 'package:khardel/views/authentification/splashscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,7 +61,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:_isLoggedIn?Acceuil():SplashScreen(),
+      home: ListOrders(),//_isLoggedIn?Acceuil():SplashScreen(),
     );
   }
 }
