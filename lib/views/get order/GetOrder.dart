@@ -61,7 +61,8 @@ class _GetOrderState extends State<GetOrder> {
               ),
               TextButton(
                 onPressed: (){
-                  _fetchCategories();
+                  _buildListOrderItems();
+                  //_getFood();
                 },
                 child: Text(
                   'قائمة الطلبات',
@@ -130,33 +131,54 @@ class _GetOrderState extends State<GetOrder> {
       listOrders.add(_orderResponse.data[i]);
     }
     print(listOrders);
+    print(listOrders[0].orderItems);
+   // _buildListOrderItems();
     setState(() {
       _isLoading = false;
     });
   }
 
   _buildListOrderItems(){
+
+    setState(() {
+      _isLoading = true;
+    });
+
     for(int i=0;i<listOrders.length;i++){
-      var orderItems = [];
+      List orderItems = [];
+
       orderItems=listOrders[i].orderItems;
+      print(orderItems);
       for(int j =0; j <orderItems.length;j++){
-         orderItemService.getOrderItem(orderItems[j].toString()).then((value) {
-           OrderItem orderItem=value.data;
-           listOrderItems.add(orderItem);
-           print(listOrderItems.length);
+        print(orderItems[j]['_id']);
+        orderItemService.getOrderItem(orderItems[j]['_id']).then((value) {
+           //OrderItem orderItem=value.data;
+           print(value.data.food);
+          // print(orderItem.food);
+          // _getFood(orderItem.food);
+          //  listOrderItems.add(orderItem);
          });
       }
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
-  _getFood(){
-    for(int i=0;i<listOrderItems.length;i++){
-        foodService.getFood(listOrderItems[i].food.toString()).then((value) {
+  _getFood(orderItem){
+    setState(() {
+      _isLoading = true;
+    });
+        foodService.getFood(orderItem.food.toString()).then((value) {
           Food food=value.data;
           print(food);
         });
-      }
+    setState(() {
+      _isLoading = false;
+    });
     }
+
+
 
   }
 
