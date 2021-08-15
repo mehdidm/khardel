@@ -190,6 +190,7 @@ class _HomeState extends State<Home> {
             price: "${listFood[index].price} شيكل",
             image: "assets/images/sandwich.png",
             role: widget.isUser  ,
+            available: listFood[index].available ,
 
           );
         },
@@ -217,6 +218,7 @@ class _HomeState extends State<Home> {
                 price: "${listFood[index].price} شيكل",
                 image: "assets/images/sandwich.png",
                 role: widget.isUser,
+                available: listFood[index].available,
               );
             }),
       ),
