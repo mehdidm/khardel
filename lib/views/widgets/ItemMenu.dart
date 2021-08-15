@@ -9,8 +9,9 @@ class ItemMenu extends StatefulWidget {
   final String price;
   final String image;
   final String id;
+  final bool role;
 
-  const ItemMenu({Key key, this.title, this.price, this.image,this.id}) : super(key: key);
+  const ItemMenu({Key key, this.title, this.price, this.image,this.id, this.role}) : super(key: key);
   @override
   _ItemMenuState createState() => _ItemMenuState();
 }
@@ -43,7 +44,7 @@ class _ItemMenuState extends State<ItemMenu> {
                   //crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      flex: 6,
+                      flex: 3,
                       child: Image.asset(
                         widget.image,
                         height: 50,
@@ -65,6 +66,7 @@ class _ItemMenuState extends State<ItemMenu> {
                     Expanded(
                      flex: 2,
                       child: Text(
+
                         widget.price,
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -73,6 +75,55 @@ class _ItemMenuState extends State<ItemMenu> {
                             fontSize: 18),
                       ),
                     ),
+
+                    widget.role ?
+                    CircleAvatar(
+                      radius: 12,
+                      backgroundColor: ColorMv,
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+
+
+                      ),
+                    )
+                    :
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+                        CircleAvatar(
+                          radius: 12,
+                          backgroundColor: ColorMv,
+                          child: Icon(
+                            Icons.edit,
+                            size: 15,
+                            color: Colors.white,
+
+
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        CircleAvatar(
+                          radius: 12,
+                          backgroundColor: ColorMv,
+                          child: Icon(
+                            Icons.delete_outlined,
+                            size: 18,
+                            color: Colors.white,
+
+
+                          ),
+                        ),
+
+                      ],
+                    )
+
+
+
+
                   ],
                 ),
               ),

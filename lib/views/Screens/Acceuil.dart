@@ -44,13 +44,13 @@ List<Widget> _buildScreens() {
      if (isUser==true) {
      return [
      UserProfil(),
-  Home(),
+  Home(isUser: true,),
   Cart(),
 
   ];
      }else {
        return [
-         Home(),
+         Home(isUser: false,),
          AddMenu(),
          GetOrder(),
 

@@ -18,12 +18,14 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'Cart.dart';
 
 class Home extends StatefulWidget {
+  final bool isUser ;
+
+  Home({this.isUser}) ;
 
 
   @override
   _HomeState createState() => _HomeState();
 }
-
 class _HomeState extends State<Home> {
   CategoriesServices get categoryService => GetIt.I<CategoriesServices>();
 
@@ -187,6 +189,8 @@ class _HomeState extends State<Home> {
             title: listFood[index].title,
             price: "${listFood[index].price} شيكل",
             image: "assets/images/sandwich.png",
+            role: widget.isUser  ,
+
           );
         },
       ),
@@ -212,6 +216,7 @@ class _HomeState extends State<Home> {
                 title: listFood[index].title,
                 price: "${listFood[index].price} شيكل",
                 image: "assets/images/sandwich.png",
+                role: widget.isUser,
               );
             }),
       ),
