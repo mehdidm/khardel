@@ -35,14 +35,19 @@ class _SignInState extends State<SignIn> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Center(
-              child: Image.asset(
-                  'assets/logo.png',
-                height: 250,
-                width: 250,
+            Padding(
+              padding: EdgeInsets.only(top: 50),
+              child: Center(
+                child: Image.asset(
+                    'assets/logo.png',
+                  height: 150,
+                  width: 150,
+                ),
               ),
             ),
+            SizedBox(height: 20,),
             Container(
+              height: MediaQuery.of(context).size.height*0.7,
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
