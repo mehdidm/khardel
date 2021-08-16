@@ -78,15 +78,15 @@ class _ListOrdersState extends State<ListOrders> {
                                 ),
                               ],
                             ),
-                            RichText(text: TextSpan(
+                            RichText(
+                              text: TextSpan(
                               children: [
                                 TextSpan(
                                     text: '1234 ',
                                   style: TextStyle(
                                     color: KBlue.withOpacity(0.5),
                                     fontSize: 20
-                                  )
-
+                                  ),
                                 ),
                                 TextSpan(
                                   text: ' :رمز الطلبية ',
