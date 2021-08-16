@@ -80,9 +80,9 @@ class _SignUpState extends State<SignUp> {
                       hint: 'البريد الإلكتروني',
                       controller: mailController,
                       valid: (value) {
-                        if (value.isNotEmpty && value == RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(mailController.text)) {
+                        if (value.isNotEmpty && RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
                           return null;
-                        } else if (value.isNotEmpty && value != RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(mailController.text)) {
+                        } else if (value.isNotEmpty && !RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
                           return 'أدخل البريد الإلكتروني الصحيح';
                         } else if (value.isEmpty){
                           return 'أدخل البريد الإلكتروني';
