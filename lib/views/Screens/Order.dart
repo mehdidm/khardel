@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:group_button/group_button.dart';
 import 'package:khardel/api/api_Response.dart';
 import 'package:khardel/models/food.dart';
 import 'package:khardel/models/orderItem.dart';
@@ -11,6 +12,8 @@ import 'package:khardel/services/supplement.services.dart';
 import 'package:khardel/views/shared/Appbar.dart';
 import 'package:khardel/views/shared/constant.dart';
 import 'package:khardel/views/widgets/ItemSup.dart';
+
+import '../../Constant.dart';
 
 class Order extends StatefulWidget {
   final String id;
@@ -139,29 +142,7 @@ class _OrderState extends State<Order> {
                             ),
                           ),
                         ),
-                        // SingleChildScrollView(
-                        //   scrollDirection: Axis.horizontal,
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       ItemSup(
-                        //         image: "assets/images/cheese.png",
-                        //       ),
-                        //       ItemSup(
-                        //         image: "assets/images/salade.png",
-                        //       ),
-                        //       ItemSup(
-                        //         image: "assets/images/soda.png",
-                        //       ),
-                        //       ItemSup(
-                        //         image: "assets/images/salade.png",
-                        //       ),
-                        //       ItemSup(
-                        //         image: "assets/images/soda.png",
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
+
                         _buildListCategoriesWidgets(),
                         SizedBox(
                           height: 5,
@@ -257,6 +238,43 @@ class _OrderState extends State<Order> {
   }
   _buildListCategoriesWidgets() {
     return Container(
+        height: MediaQuery.of(context).size.height*0.07,
+        //width: MediaQuery.of(context).size.width*0.2,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            GroupButton(
+              spacing: 5,
+              buttonHeight: 50,
+              isRadio: true,
+              direction: Axis.horizontal,
+              onSelected: (index, isSelected) {
+                print(
+                    '$index button is ${isSelected ? 'selected' : 'unselected'}');
+                category = listSupplement[index];
+              } ,
+              buttons:listSupplement,
+              // selectedButtons: [0, 1], /// [List<int>] after 2.2.1 version
+              selectedTextStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: KMauve,
+              ),
+              unselectedTextStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: KBlue,
+              ),
+              selectedColor:Color(0xffeadffd),
+              unselectedColor:Color(0xffededed),
+              //selectedBorderColor: KMauve,
+              //unselectedBorderColor: Colors.grey[500],
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+          ],
+        )
+    );
+  /*  return Container(
       height: MediaQuery.of(context).size.height * 0.15,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -272,7 +290,7 @@ class _OrderState extends State<Order> {
           );
         },
       ),
-    );
+    );*/
   }
 
 
