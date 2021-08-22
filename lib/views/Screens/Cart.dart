@@ -431,21 +431,21 @@ class _CartScreenState extends State<CartScreen> {
             child: ListView.builder(
               itemCount: value.lst.length ?? 0,
               itemBuilder: (context, index) {
-                Food food =Food();
-                // value.del(index);
-                foodService.getFood(value.lst[index].food.toString()).then((response) {
-                  setState(() {
-                    _isLoading = false;
-                  });
-
-                  if (response.error) {
-                    errorMessage = response.errorMessage ?? 'An error occurred';
-                  }
-                  food = response.data;
-                  print(food.title);
-                  // listFoodItems.add(food);
-                  // print(listFoodItems);
-                });
+                // Food food =Food();
+                // // value.del(index);
+                // foodService.getFood(value.lst[index].food.toString()).then((response) {
+                //   setState(() {
+                //     _isLoading = false;
+                //   });
+                //
+                //   if (response.error) {
+                //     errorMessage = response.errorMessage ?? 'An error occurred';
+                //   }
+                //   food = response.data;
+                //   print(food.title);
+                //   // listFoodItems.add(food);
+                //   // print(listFoodItems);
+                // });
                 return Dismissible(
                   key: UniqueKey(),
                   direction: DismissDirection.horizontal,
