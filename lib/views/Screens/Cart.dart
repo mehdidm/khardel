@@ -346,11 +346,11 @@
 //     );
 //   }
 
-  // _addItem() async{
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   final item=Order(
+// _addItem() async{
+//   setState(() {
+//     _isLoading = true;
+//   });
+//   final item=Order(
 //       userId: '60f89ad57ceda214d885fdb7',
 //       orderItems: listOrderItemIds,
 //       code: "78954",
@@ -386,6 +386,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:get_it/get_it.dart';
@@ -408,15 +409,18 @@ class _CartScreenState extends State<CartScreen> {
   FoodsServices get foodService => GetIt.I<FoodsServices>();
   String errorMessage;
   Future<APIResponse<Food>> _foodResponse;
-  List<Food> listFoodItems=[];
+  List<Food> listFoodItems = [];
   bool _isLoading = false;
-
+  final controller = Get.put(AddToCartVM());
   @override
   void initState() {
     // TODO: implement initState
+
+    print(controller.lst.length);
     _getFoodItem();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -431,54 +435,20 @@ class _CartScreenState extends State<CartScreen> {
             child: ListView.builder(
               itemCount: value.lst.length ?? 0,
               itemBuilder: (context, index) {
-                // Food food =Food();
-                // // value.del(index);
-                // foodService.getFood(value.lst[index].food.toString()).then((response) {
-                //   setState(() {
-                //     _isLoading = false;
-                //   });
-                //
-                //   if (response.error) {
-                //     errorMessage = response.errorMessage ?? 'An error occurred';
-                //   }
-                //   food = response.data;
-                //   print(food.title);
-                //   // listFoodItems.add(food);
-                //   // print(listFoodItems);
-                // });
                 return Dismissible(
                   key: UniqueKey(),
                   direction: DismissDirection.horizontal,
                   background: Container(
                     color: Colors.red,
                   ),
-                  onDismissed: (direction) {
-
-                  },
+                  onDismissed: (direction) {},
                   child: GestureDetector(
-                    // onTap: (){
-                    //   Food food =Food();
-                    //   // value.del(index);
-                    //   foodService.getFood(value.lst[index].food.toString()).then((response) {
-                    //     setState(() {
-                    //       _isLoading = false;
-                    //     });
-                    //
-                    //     if (response.error) {
-                    //       errorMessage = response.errorMessage ?? 'An error occurred';
-                    //     }
-                    //     food = response.data;
-                    //     print(food.title);
-                    //     // listFoodItems.add(food);
-                    //     // print(listFoodItems);
-                    //   });
-                    // },
                     child: CartItem(
                       screenSize: screenSize,
                       qte: value.lst[index].quantity.toString(),
-                      title: food.title,
-                      price: food.price,
-                      points: food.points,
+                      title: listFoodItems[index].title,
+                      price: listFoodItems[index].price,
+                      points: listFoodItems[index].points,
                     ),
                   ),
                 );
@@ -492,174 +462,163 @@ class _CartScreenState extends State<CartScreen> {
 
   _getFoodItem() async {
     Food food = Food();
-    GetBuilder<AddToCartVM>(
+    for (var item in controller.lst) {
+      setState(() {
+        _isLoading = true;
+      });
+      foodService.getFood(item.food.toString()).then((response) {
+        setState(() {
+          _isLoading = false;
+        });
 
-      init: AddToCartVM(),
-      builder: (value){
-        for (var item in value.lst) {
-          setState(() {
-            _isLoading = true;
-          });
-          foodService.getFood(item.food.toString()).then((response) {
-            setState(() {
-              _isLoading = false;
-            });
-
-            if (response.error) {
-              errorMessage = response.errorMessage ?? 'An error occurred';
-            }
-            food = response.data;
-            listFoodItems.add(food);
-            print(listFoodItems);
-          });
+        if (response.error) {
+          errorMessage = response.errorMessage ?? 'An error occurred';
         }
-        return;
-      }
-    );
-
+        food = response.data;
+        listFoodItems.add(food);
+        print(listFoodItems);
+      });
+    }
   }
-
 }
 
 class CartItem extends StatelessWidget {
   const CartItem(
-      {Key key, @required this.screenSize, this.title,this.points,this.price,this.qte, this.del})
+      {Key key,
+      @required this.screenSize,
+      this.title,
+      this.points,
+      this.price,
+      this.qte,
+      this.del})
       : super(key: key);
 
   final Size screenSize;
-  final String qte,title,price,points;
+  final String qte, title, price, points;
   final Function del;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        child:Dismissible(
-          //direction: DismissDirection.startToEnd,
-          // confirmDismiss:(direction) {
-          //   _removeOrderItem("611260ddfe44ad0015bacb94", listOrderItems[index].id);
-          // },
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 0),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.remove_circle_outline_sharp,
-                              size: 40,
-                              color: ColorMv,
-                            ),
-                            SizedBox(
-                              width:
-                              MediaQuery.of(context).size.width *
-                                  0.02,
-                            ),
-                            Text(
-
-                                    qte,
-                                style: TextStyle(fontSize: 25)),
-                            SizedBox(
-                              width:
-                              MediaQuery.of(context).size.width *
-                                  0.02,
-                            ),
-                            Icon(
-                              Icons.add_circle_outline,
-                              size: 40,
-                              color: ColorMv,
-                            )
-                          ],
-                        ),
-                      ),
-                      // width: MediaQuery.of(context).size.height * 0.1,
-                      // height:
-                      //     MediaQuery.of(context).size.width * 0.15,
-                      //BoxDecoration Widget
-                      decoration: BoxDecoration(
-                        color: Color(0xffE9DFDF),
-                        //Border.all
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 30),
+      child: Dismissible(
+        //direction: DismissDirection.startToEnd,
+        // confirmDismiss:(direction) {
+        //   _removeOrderItem("611260ddfe44ad0015bacb94", listOrderItems[index].id);
+        // },
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            title,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                            ),
+                          Icon(
+                            Icons.remove_circle_outline_sharp,
+                            size: 40,
+                            color: ColorMv,
                           ),
-                          Text(
-                            "عدد نقاط الوجبة",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
                           ),
-                          Text(
-                            price,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: ColorGl),
+                          Text(qte, style: TextStyle(fontSize: 25)),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
                           ),
+                          Icon(
+                            Icons.add_circle_outline,
+                            size: 40,
+                            color: ColorMv,
+                          )
                         ],
                       ),
                     ),
-
-                    Image.asset('assets/images/sandwich.png'),
-                    //DecorationImage
-                  ],
-                ),
-                Text(
-                  "عدد نقاط الوجبة :  ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: ColorBlue,
-                    fontSize: 20,
+                    // width: MediaQuery.of(context).size.height * 0.1,
+                    // height:
+                    //     MediaQuery.of(context).size.width * 0.15,
+                    //BoxDecoration Widget
+                    decoration: BoxDecoration(
+                      color: Color(0xffE9DFDF),
+                      //Border.all
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            // width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.25,
-            //BoxDecoration Widget
-            decoration: BoxDecoration(
-              color: Color(0xffF6F6F6), //Border.all
-              borderRadius: BorderRadius.circular(15),
-            ), //BoxDecoration
-          ),
-          background: Container(
-            height: MediaQuery.of(context).size.height * 0.25,
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                          ),
+                        ),
+                        Text(
+                          "عدد نقاط الوجبة",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          price,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: ColorGl),
+                        ),
+                      ],
+                    ),
+                  ),
 
-            color: ColorMv,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Icon(
-                    Icons.delete_outlined,
-                    size: 60,
-                    color: Colors.white,
-                  )),
-            ),
+                  Image.asset('assets/images/sandwich.png'),
+                  //DecorationImage
+                ],
+              ),
+              Text(
+                "عدد نقاط الوجبة : ${points} ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: ColorBlue,
+                  fontSize: 20,
+                ),
+              ),
+            ],
           ),
-          key: ValueKey("my"),
-          direction: DismissDirection.endToStart,
-          onDismissed: (direction) {},
-          confirmDismiss: (direction){},
+          // width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.25,
+          //BoxDecoration Widget
+          decoration: BoxDecoration(
+            color: Color(0xffF6F6F6), //Border.all
+            borderRadius: BorderRadius.circular(15),
+          ), //BoxDecoration
         ),
+        background: Container(
+          height: MediaQuery.of(context).size.height * 0.25,
+          color: ColorMv,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.delete_outlined,
+                  size: 60,
+                  color: Colors.white,
+                )),
+          ),
+        ),
+        key: ValueKey("my"),
+        direction: DismissDirection.endToStart,
+        onDismissed: (direction) {},
+        confirmDismiss: (direction) {},
+      ),
     );
   }
 }
