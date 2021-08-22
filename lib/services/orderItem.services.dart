@@ -39,7 +39,7 @@ class OrderItemServices{
         .then((data) {
       if (data.statusCode == 200) {
         final jsonData = json.decode(data.body);
-        return APIResponse<OrderItem>(data:OrderItem.fromJson(jsonData));
+        return APIResponse<OrderItem>(data:OrderItem.fromJson(jsonData['data']));
       }
       return APIResponse<OrderItem>(error: true, errorMessage: 'An error occured');
     }).catchError((_) =>

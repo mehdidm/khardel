@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:group_button/group_button.dart';
 import 'package:khardel/api/api_Response.dart';
 import 'package:khardel/models/food.dart';
 import 'package:khardel/models/orderItem.dart';
 import 'package:khardel/models/supplement.dart';
+import 'package:khardel/services/cartModelView.dart';
 import 'package:khardel/services/food.services.dart';
 import 'package:khardel/services/orderItem.services.dart';
 import 'package:khardel/services/supplement.services.dart';
@@ -32,7 +34,7 @@ class _OrderState extends State<Order> {
   final List<String> listSupplementID = [];
   final List<String> selectedSupplementID = [];
   APIResponse<List<Supplement>> _supplementResponse;
-
+  final List<OrderItem> listOrderItems=[];
   bool _isLoading = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController priceController = TextEditingController();
@@ -187,17 +189,26 @@ class _OrderState extends State<Order> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 20.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _addItem();
-                            },
-                            child: Text(
-                              'أطلب',
-                              textAlign: TextAlign.center,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              shape: StadiumBorder(),
-                              primary: ColorMv,
+                          child: GetBuilder<AddToCartVM>(
+                            init:  AddToCartVM(),
+                            builder:(value) =>ElevatedButton(
+                              onPressed: () {
+                                value.add(OrderItem(
+                                     userId: '60f89ad57ceda214d885fdb7',
+                                        supplements: listSupplement,
+                                      food: food.id,
+                                      other:otherController.text ,
+                                      quantity: 3,
+                                    ));
+                              },
+                              child: Text(
+                                'أطلب',
+                                textAlign: TextAlign.center,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                shape: StadiumBorder(),
+                                primary: ColorMv,
+                              ),
                             ),
                           ),
                         )
@@ -325,21 +336,21 @@ class _OrderState extends State<Order> {
   }
 
   _addItem() async{
-    setState(() {
-      _isLoading = true;
-    });
-    final item=OrderItem(
-     userId: '60f89ad57ceda214d885fdb7',
-        supplements: listSupplement,
-      food: food.id,
-      other:otherController.text ,
-      quantity: 3,
-    );
-    print(listSupplement);
-    final result = await orderItemService.addOrderItem(item);
-    print(result);
-    setState(() {
-      _isLoading = false;
-    });
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    // final item=OrderItem(
+    //  userId: '60f89ad57ceda214d885fdb7',
+    //     supplements: listSupplement,
+    //   food: food.id,
+    //   other:otherController.text ,
+    //   quantity: 3,
+    // );
+    // print(listSupplement);
+    // final result = await orderItemService.addOrderItem(item);
+    // print(result);
+    // setState(() {
+    //   _isLoading = false;
+    // });
   }
 }

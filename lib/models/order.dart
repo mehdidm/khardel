@@ -1,3 +1,4 @@
+
 class Order {
   var id;
   var userId;
@@ -5,13 +6,17 @@ class Order {
   String code;
   bool delivery;
   bool done;
+  DateTime createdAt;
+  DateTime deliveryDate;
   Order(
       {this.id,
       this.orderItems,
       this.code,
       this.delivery,
       this.done,
-      this.userId});
+      this.userId,
+        this.deliveryDate,
+      this.createdAt});
 
   Map<String, dynamic> toJson() {
     return {
@@ -20,7 +25,9 @@ class Order {
       "orderItems": orderItems,
       "delivery": delivery,
       "done": done,
-      "code": code
+      "code": code,
+      "createdAt": createdAt.toIso8601String(),
+      "deliveryDate":deliveryDate.toIso8601String(),
     };
   }
 
@@ -31,6 +38,12 @@ class Order {
         delivery: item['delivery'],
         done: item['done'],
         code: item['code'],
-        orderItems: item['orderItems']);
+        orderItems: item['orderItems'],
+        createdAt:DateTime.parse(item['createdAt']),
+      deliveryDate: DateTime.parse(item['deliveryDate'])
+    );
   }
+
+
+
 }

@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:khardel/models/user.dart';
+import 'package:khardel/services/cartModelView.dart';
 import 'package:khardel/views/Screens/AddMenu.dart';
 import 'package:khardel/views/Screens/Cart.dart';
 import 'package:khardel/views/Screens/Home.dart';
 import 'package:khardel/views/get%20order/GetOrder.dart';
 import 'package:khardel/views/shared/constant.dart';
 import 'package:khardel/views/user/UserProfil.dart';
+import 'package:khardel/views/widgets/cartCounter.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,7 +48,7 @@ List<Widget> _buildScreens() {
      return [
      UserProfil(),
   Home(isUser: true,),
-  Cart(),
+  CartScreen(),
 
   ];
      }else {
@@ -74,7 +77,26 @@ List<PersistentBottomNavBarItem> _navBarsItems() {
            inactiveColorPrimary: ColorMv,
          ),
          PersistentBottomNavBarItem(
-           icon: Icon(CupertinoIcons.cart),
+           icon:Stack(
+             children: [
+               Align(
+                   alignment: Alignment.bottomCenter,
+                   child: Icon(CupertinoIcons.shopping_cart)),
+               Positioned(
+                 top: 0,
+                 left: 0,
+                 right: 0,
+                 child: GetBuilder<AddToCartVM>(
+                   // specify type as Controller
+                   init: AddToCartVM(), // intialize with the Controller
+                   builder: (value) => CartCounter(
+                     count: value.lst.length.toString() ?? "0",
+                   ),
+                 ),
+               ),
+             ],
+           ),
+
            title: ("طلاباتي"),
            activeColorPrimary: ColorMv,
            inactiveColorPrimary: ColorMv,

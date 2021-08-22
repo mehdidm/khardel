@@ -109,11 +109,10 @@ class _ListOrdersState extends State<ListOrders> {
                           ),
                         ),
                         SizedBox(height: 10,),
-                        OrderItem(
+                        OrderItemWidget(
                           Title1: 'بطاطا و دجيز ',
                           Title2: 'بدون بصل ',
                           Title3: 'الاضافات ',
-                          Title4: 'الملاحظات ',
                         ),
                         Divider(
                           height: 25,
@@ -134,56 +133,67 @@ class _ListOrdersState extends State<ListOrders> {
   }
 }
 
-class OrderItem extends StatelessWidget {
+class OrderItemWidget extends StatelessWidget {
   final String Title1;
   final String Title2;
   final String Title3;
-  final String Title4;
-  const OrderItem({
-    Key key, this.Title1, this.Title2, this.Title3, this.Title4,
+  const OrderItemWidget({
+    Key key, this.Title1, this.Title2, this.Title3,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+    return Column(
       children: [
-        Column(
-          children: [
-            Text(
-              Title1,
-              style: TextStyle(
-                  color: KBlue.withOpacity(0.5),
-                  fontSize: 17.5
-              ),
-            ),
-            Text(
-              Title2,
-              style: TextStyle(
-                  color: KBlue.withOpacity(0.5),
-                  fontSize: 17.5
-              ),
-            ),
-          ],
+        Text(
+           Title3,
+          style: TextStyle(
+              color: KMauve,
+              fontSize: 20
+          ),
         ),
-        SizedBox(width: 20,),
-        Column(
+        SizedBox(height: 10,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(
-              Title3,
-              style: TextStyle(
-                  color: KBlue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17.5
-              ),
+            Column(
+              children: [
+                Text(
+                  Title1,
+                  style: TextStyle(
+                      color: KBlue.withOpacity(0.5),
+                      fontSize: 17.5
+                  ),
+                ),
+                Text(
+                  Title2,
+                  style: TextStyle(
+                      color: KBlue.withOpacity(0.5),
+                      fontSize: 17.5
+                  ),
+                ),
+              ],
             ),
-            Text(
-              Title4,
-              style: TextStyle(
-                  color: KBlue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17.5
-              ),
+            SizedBox(width: 20,),
+            Column(
+              children: [
+                Text(
+            'الاضافات',
+                  style: TextStyle(
+                      color: KBlue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17.5
+                  ),
+                ),
+                Text(
+        'الملاحظات',
+                  style: TextStyle(
+                      color: KBlue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17.5
+                  ),
+                ),
+              ],
             ),
           ],
         ),
