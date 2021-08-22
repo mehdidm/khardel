@@ -35,6 +35,8 @@ dependencies:
   group_button: ^3.0.1
   persistent_bottom_nav_bar: any
   get: ^3.26.0
+  pull_to_refresh: ^2.0.0
+
 
 
 

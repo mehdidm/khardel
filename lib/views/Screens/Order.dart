@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:group_button/group_button.dart';
 import 'package:khardel/api/api_Response.dart';
+import 'package:khardel/models/CartItem.dart';
 import 'package:khardel/models/food.dart';
 import 'package:khardel/models/orderItem.dart';
 import 'package:khardel/models/supplement.dart';
@@ -193,13 +194,19 @@ class _OrderState extends State<Order> {
                             init:  AddToCartVM(),
                             builder:(value) =>ElevatedButton(
                               onPressed: () {
-                                value.add(OrderItem(
-                                     userId: '60f89ad57ceda214d885fdb7',
-                                        supplements: listSupplement,
-                                      food: food.id,
-                                      other:otherController.text ,
-                                      quantity: 3,
-                                    ));
+                                value.add(CartItem(
+                                  orderItem: OrderItem(
+                                    userId: '60f89ad57ceda214d885fdb7',
+                                    supplements: listSupplement,
+                                    food: food.id,
+                                    other:otherController.text ,
+                                    quantity: 3,
+                                  ),
+                                  foodPoints: food.points,
+                                  foodPrice: food.price,
+                                  foodTitle: food.title,
+                                )
+                                   );
                               },
                               child: Text(
                                 'أطلب',

@@ -1,12 +1,13 @@
 
 import 'package:get/get.dart';
+import 'package:khardel/models/CartItem.dart';
 import 'package:khardel/models/orderItem.dart';
 
 class AddToCartVM extends GetxController {
-  List<OrderItem> lst = [];
+  List<CartItem> lst = [];
 
-  add(OrderItem orderItem) {
-    lst.add(orderItem);
+  add(CartItem cartItem) {
+    lst.add(cartItem);
     update();
   }
 

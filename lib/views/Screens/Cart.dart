@@ -387,6 +387,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:get_it/get_it.dart';
@@ -410,49 +411,79 @@ class _CartScreenState extends State<CartScreen> {
   String errorMessage;
   Future<APIResponse<Food>> _foodResponse;
   List<Food> listFoodItems = [];
+  var controller = Get.put(AddToCartVM());
+
   bool _isLoading = false;
-  final controller = Get.put(AddToCartVM());
+  //final controller = Get.put(AddToCartVM());
   @override
   void initState() {
     // TODO: implement initState
 
-    print(controller.lst.length);
-    _getFoodItem();
+  //  _getFoodItem();
     super.initState();
   }
 
+
+
+  RefreshController _refreshController =
+  RefreshController(initialRefresh: false);
+  void _onRefresh() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    controller = Get.put(AddToCartVM());
+    //_getFoodItem();
+    if(mounted)
+      setState(() {
+
+      });
+    _refreshController.loadComplete();
+  }
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return GetBuilder<AddToCartVM>(
       // specify type as Controller
-      init: AddToCartVM(), // intialize with the Controller
+     //init: AddToCartVM(), // intialize with the Controller
+      init: AddToCartVM(),
       builder: (value) => Scaffold(
         body: SafeArea(
           child: Container(
             height: screenSize.height,
             width: double.infinity,
-            child: ListView.builder(
-              itemCount: value.lst.length ?? 0,
-              itemBuilder: (context, index) {
-                return Dismissible(
-                  key: UniqueKey(),
-                  direction: DismissDirection.horizontal,
-                  background: Container(
-                    color: Colors.red,
-                  ),
-                  onDismissed: (direction) {},
-                  child: GestureDetector(
-                    child: CartItem(
-                      screenSize: screenSize,
-                      qte: value.lst[index].quantity.toString(),
-                      title: listFoodItems[index].title,
-                      price: listFoodItems[index].price,
-                      points: listFoodItems[index].points,
+            child: SmartRefresher(
+              controller: _refreshController,
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
+              child: ListView.builder(
+                itemCount: value.lst.length ?? 0,
+                itemBuilder: (context, index) {
+                  return Dismissible(
+                    key: UniqueKey(),
+                    direction: DismissDirection.horizontal,
+                    background: Container(
+                      color: Colors.red,
                     ),
-                  ),
-                );
-              },
+                    onDismissed: (direction) {},
+                    child: GestureDetector(
+                      child: CartItem(
+                        screenSize: screenSize,
+                        qte: value.lst[index].orderItem.quantity.toString(),
+                        title: value.lst[index].foodTitle,
+                        price:value.lst[index].foodPrice,
+                        points: value.lst[index].foodPoints,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -460,26 +491,27 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  _getFoodItem() async {
-    Food food = Food();
-    for (var item in controller.lst) {
-      setState(() {
-        _isLoading = true;
-      });
-      foodService.getFood(item.food.toString()).then((response) {
-        setState(() {
-          _isLoading = false;
-        });
-
-        if (response.error) {
-          errorMessage = response.errorMessage ?? 'An error occurred';
-        }
-        food = response.data;
-        listFoodItems.add(food);
-        print(listFoodItems);
-      });
-    }
-  }
+  // _getFoodItem() async {
+  //
+  //   Food food = Food();
+  //   for (var item in controller.lst) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     foodService.getFood(item.food.toString()).then((response) {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //
+  //       if (response.error) {
+  //         errorMessage = response.errorMessage ?? 'An error occurred';
+  //       }
+  //       food = response.data;
+  //       listFoodItems.add(food);
+  //       print(listFoodItems);
+  //     });
+  //   }
+  // }
 }
 
 class CartItem extends StatelessWidget {
