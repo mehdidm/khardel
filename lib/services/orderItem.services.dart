@@ -45,13 +45,13 @@ class OrderItemServices{
     }).catchError((_) =>
         APIResponse<OrderItem>(error: true, errorMessage: 'An error occured'));
   }
-  Future<APIResponse<bool>> addOrderItem(OrderItem item) {
+  Future<APIResponse<bool>> addOrderItem(List<OrderItem> item) {
     return client
         .post(Uri.parse(API + '/addOrderItem'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(item.toJson()))
+        body: jsonEncode(item.map((i) => i.toJson()).toList()))
         .then((data) {
       if (data.statusCode == 201) {
         return APIResponse<bool>(data: true);
@@ -60,7 +60,6 @@ class OrderItemServices{
     }).catchError((_) =>
         APIResponse<bool>(error: true, errorMessage: 'An error occured'));
   }
-
   Future<APIResponse> addSuppToOrderItem(String id,String suppId) {
     return client
         .post(

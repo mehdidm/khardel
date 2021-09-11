@@ -30,6 +30,7 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
       onSelected: (isSelected) {
         setState(() {
           _isSelected = isSelected;
+          print(widget.chipName);
           return widget.chipName;
         });
       },

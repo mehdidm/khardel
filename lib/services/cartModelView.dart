@@ -15,4 +15,24 @@ class AddToCartVM extends GetxController {
     lst.removeAt(index);
     update();
   }
+
+  getTotalPrice(){
+    double  total=0.0;
+    for(int i=0;i<lst.length;i++){
+      // ignore: unnecessary_statements
+      total=total+(double.parse(lst[i].foodPrice)*lst[i].orderItem.quantity);
+    }
+    return total;
+    //update();
+  }
+
+  getTotalPoints(){
+    int  totalPoints=0;
+
+    for(int i=0;i<lst.length;i++){
+      totalPoints=totalPoints+(int.parse(lst[i].foodPoints)*lst[i].orderItem.quantity);
+    }
+    return totalPoints;
+    //update();
+  }
 }
