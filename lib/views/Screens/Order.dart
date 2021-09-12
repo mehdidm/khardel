@@ -277,6 +277,23 @@ class _OrderState extends State<Order> {
                                   foodTitle: food.title,
 
                                 ));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                   SnackBar(
+                                    content: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.thumb_up_alt_outlined,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(width: 20,),
+                                        Expanded(
+                                            child:Text('تم الطلب بنجاح')
+                                        )
+                                      ],
+                                    ),
+
+                                  ),
+                                );
                               },
                               child: Text(
                                 'أطلب',
