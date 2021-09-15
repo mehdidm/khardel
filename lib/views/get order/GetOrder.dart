@@ -328,14 +328,14 @@ class _GetOrderState extends State<GetOrder> {
                               // Convert each item into a widget based on the type of item it is.
                               itemBuilder: (context, j) {
                                 List<String> supplements=[];
-                                for(int i =0;i<listOrders[index].orderItems[j]['supplements'].length;i++){
-                                   supplements.add(listOrders[index].orderItems[j]['supplements'][i]['title']);                              }
+                                for(int i =0;i<listOrders[index].orderItems[j].supplements.length;i++){
+                                   supplements.add(listOrders[index].orderItems[j].supplements[i]);                              }
                                 return Column(
                                   children: [
                                     OrderItemWidget(
                                       Title1: supplements.toString(),
-                                      Title2: listOrders[index].orderItems[j]['other'],
-                                      Title3: listOrders[index].orderItems[j]['food']['title'],
+                                      Title2: listOrders[index].orderItems[j].other,
+                                      Title3: listOrders[index].orderItems[j].food['title'],
                                     ),
                                     Divider(
                                       height: 25,

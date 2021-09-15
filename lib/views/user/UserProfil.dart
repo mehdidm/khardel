@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 
 class UserProfil extends StatefulWidget {
 
-  final int userID;
+  final String userID;
   const UserProfil({Key key, this.userID}) : super(key: key);
 
   @override
@@ -27,6 +27,7 @@ class _UserProfilState extends State<UserProfil> {
   bool _isEnabled =false;
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
   var user;
+  var userId;
   int Id;
   String errorMessage;
 
@@ -40,7 +41,7 @@ class _UserProfilState extends State<UserProfil> {
   }
   void _getUserInfo() async {
     SharedPreferences localStorage1 = await SharedPreferences.getInstance();
-    var userId = localStorage1.getString('id');
+    userId = localStorage1.getString('id');
     print(userId);
     setState(() {
       user = userId;
@@ -91,7 +92,7 @@ class _UserProfilState extends State<UserProfil> {
               SizedBox(
                 height: 15,
               ),
-              NestedTabBar(),
+              NestedTabBar(userId: widget.userID.toString(),),
             ],
           ),
         ),

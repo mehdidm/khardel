@@ -19,9 +19,12 @@ class Acceuil extends StatefulWidget {
 
 class _AcceuilState extends State<Acceuil> {
   bool isUser = true;
+  var userId;
   void _getUserRole() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
+    SharedPreferences localStorageId = await SharedPreferences.getInstance();
     var roles = localStorage.getStringList('roles');
+     userId=localStorageId.getString('id');
     print(roles);
     if (roles.contains('ROLE_ADMIN')) {
       setState(() {
@@ -39,7 +42,7 @@ class _AcceuilState extends State<Acceuil> {
   List<Widget> _buildScreens() {
     if (isUser == true) {
       return [
-        UserProfil(),
+        UserProfil(userID: userId,),
         Home(
           isUser: true,
         ),

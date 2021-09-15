@@ -15,6 +15,18 @@ class AddToCartVM extends GetxController {
     lst.removeAt(index);
     update();
   }
+  bool checkItem (CartItem item){
+    bool isExist = false;
+    lst.forEach((CartItem i) => {
+      if(i.foodTitle == item.foodTitle){
+        isExist = true
+      }
+    });
+    return isExist;
+  }
+  void removeAllItem () {
+    lst.clear();
+  }
 
   getTotalPrice(){
     double  total=0.0;

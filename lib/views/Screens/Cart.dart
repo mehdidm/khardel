@@ -238,9 +238,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:khardel/Constant.dart';
+import 'package:khardel/models/order.dart';
+import 'package:khardel/services/order.services.dart';
 import 'package:khardel/views/shared/Appbar.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:khardel/api/api_Response.dart';
@@ -250,6 +251,7 @@ import 'package:khardel/services/cartModelView.dart';
 import 'package:khardel/services/food.services.dart';
 import 'package:khardel/services/orderItem.services.dart';
 import 'package:khardel/views/shared/constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartScreen extends StatefulWidget {
   @override
@@ -258,6 +260,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   OrderItemServices get orderItemService => GetIt.I<OrderItemServices>();
+  OrderServices get orderServices=>GetIt.I<OrderServices>();
   APIResponse<List<OrderItem>> _orderItemResponse;
   FoodsServices get foodService => GetIt.I<FoodsServices>();
   String errorMessage;
@@ -265,14 +268,21 @@ class _CartScreenState extends State<CartScreen> {
   List<Food> listFoodItems = [];
   var controller = Get.put(AddToCartVM());
   RxDouble totalCartPrice = 0.0.obs;
+  var userId;
 
   bool _isLoading = false;
   @override
-  void initState() {
+  void initState(){
     // TODO: implement initState
-
+_getUserInfo();
     //  _getFoodItem();
     super.initState();
+  }
+
+  _getUserInfo()async{
+    SharedPreferences localStorage1 = await SharedPreferences.getInstance();
+    userId = localStorage1.getString('id');
+    print(userId);
   }
 
   RefreshController _refreshController =
@@ -400,16 +410,23 @@ class _CartScreenState extends State<CartScreen> {
                     print(value.lst.length);
                     for (int i = 0; i < value.lst.length; i++) {
                       item.add(OrderItem(
-                        userId: '60f89ad57ceda214d885fdb7',
+                        userId: userId,
                         supplements: value.lst[i].orderItem.supplements,
                         food: value.lst[i].orderItem.food,
                         other: value.lst[i].orderItem.other,
                         quantity: 3,
                       ));
                     }
+
+                    Order order=Order(
+                      userId: userId,
+                      orderItems: item,
+                      delivery: true,
+                      done: false,
+                      code: '147852',
+                    );
                     print(item);
-                    final result = await orderItemService.addOrderItem(item);
-                    print(result);
+                    await orderServices.addOrder(order).then((result) => value.removeAllItem());
                     setState(() {
                       _isLoading = false;
                     });

@@ -32,6 +32,27 @@ class OrderServices{
     }).catchError((_) => APIResponse<List<Order>>(
         error: true, errorMessage: 'An error occured'));
   }
+
+   getUserOrders(String id) async{
+     final response = await client
+         .get(Uri.parse(API+'/getUserOrder/'+id));
+
+     if (response.statusCode == 200) {
+       // If the server did return a 200 OK response,
+       // then parse the JSON.
+       final jsonData = json.decode(response.body);
+       final events = <Order>[];
+       for (var item in jsonData) {
+         events.add(Order.fromJson(item));
+       }
+       print(events);
+       return events;
+     } else {
+       // If the server did not return a 200 OK response,
+       // then throw an exception.
+       throw Exception('Failed to load album');
+     }
+  }
   Future<APIResponse<Order>> getOrder(String Id) {
     return client
         .get(

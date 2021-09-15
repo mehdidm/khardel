@@ -1,4 +1,6 @@
 
+import 'package:khardel/models/orderItem.dart';
+
 class Order {
   var id;
   var userId;
@@ -26,8 +28,8 @@ class Order {
       "delivery": delivery,
       "done": done,
       "code": code,
-      "createdAt": createdAt.toIso8601String(),
-      "deliveryDate":deliveryDate.toIso8601String(),
+      // "createdAt": createdAt.toIso8601String(),
+      // "deliveryDate":deliveryDate.toIso8601String(),
     };
   }
 

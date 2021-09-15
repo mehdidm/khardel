@@ -1,7 +1,7 @@
 class OrderItem{
   var id;
   var userId;
-  List supplements;
+  List<String> supplements;
   int quantity;
   var food;
   String other;
@@ -11,7 +11,7 @@ class OrderItem{
   Map<String, dynamic> toJson() {
     return {
       "userId":userId,
-      "_id": id,
+     // "_id": id,
       "food":food,
       "supplements":supplements,
       "qte":quantity,
