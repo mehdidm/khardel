@@ -10,7 +10,7 @@ class OrderItem{
 
   Map<String, dynamic> toJson() {
     return {
-      "userId":userId,
+      //"userId":userId,
      // "_id": id,
       "food":food,
       "supplements":supplements,

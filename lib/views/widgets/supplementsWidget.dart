@@ -5,14 +5,24 @@ import 'package:khardel/Constant.dart';
 
 class SuppWidget extends StatefulWidget {
   final List<String>list;
+  final List<String> listUpdate;
   final String label;
   final List<String> listSelected;
-  SuppWidget({this.list,this.label,this.listSelected});
+  SuppWidget({this.list,this.label,this.listSelected,this.listUpdate});
   @override
   _SuppWidgetState createState() => _SuppWidgetState();
 }
 
 class _SuppWidgetState extends State<SuppWidget> {
+   List<int> selectedBtns=[];
+  _getSelectedButtons(){
+      for(int j=0;j<widget.listUpdate.length;j++){
+        if(widget.list.contains(widget.listUpdate[j])){
+          selectedBtns.add(j);
+        }
+print(selectedBtns);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,7 +48,7 @@ class _SuppWidgetState extends State<SuppWidget> {
           // _findFoodUsingCategory(listFood, selected);
         },
         buttons: widget.list,
-        //  selectedButtons: [0, 1], /// [List<int>] after 2.2.1 version
+         selectedButtons: selectedBtns, /// [List<int>] after 2.2.1 version
         selectedTextStyle: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 18,

@@ -16,8 +16,8 @@ import 'package:khardel/views/widgets/SearchField.dart';
 
 class Home extends StatefulWidget {
   final bool isUser;
-
-  Home({this.isUser});
+  final orderId;
+  Home({this.isUser,this.orderId});
 
   @override
   _HomeState createState() => _HomeState();
@@ -36,6 +36,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    print(widget.orderId);
     _fetchCategories();
     _fetchFoods();
     listFood = [];
@@ -266,6 +267,7 @@ class _HomeState extends State<Home> {
             itemCount: listFood.length,
             itemBuilder: (BuildContext context, int index) {
               return ItemMenu(
+                orderId: widget.orderId,
                 id: listFood[index].id,
                 title: listFood[index].title,
                 price: "${listFood[index].price} شيكل",

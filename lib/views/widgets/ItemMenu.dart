@@ -11,8 +11,8 @@ class ItemMenu extends StatefulWidget {
   final String id;
   final bool role;
   final bool available;
-
-  const ItemMenu({Key key, this.title, this.price, this.image, this.id, this.role, this.available}) : super(key: key);
+  final orderId;
+  const ItemMenu({Key key, this.title, this.price, this.image, this.id, this.role, this.available,this.orderId}) : super(key: key);
 
 
 
@@ -27,7 +27,7 @@ class _ItemMenuState extends State<ItemMenu> {
       onTap: () {
         // Navigator.push(context, MaterialPageRoute(builder: (context)=>ModifierMenu(id:widget.id)));
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Order(id: widget.id)));
+            MaterialPageRoute(builder: (context) => Order(id: widget.id,orderId: widget.orderId,)));
       },
       child: Column(
         children: [

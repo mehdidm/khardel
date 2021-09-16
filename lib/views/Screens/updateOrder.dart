@@ -10,10 +10,8 @@ import 'package:khardel/models/orderItem.dart';
 import 'package:khardel/models/supplement.dart';
 import 'package:khardel/services/cartModelView.dart';
 import 'package:khardel/services/food.services.dart';
-import 'package:khardel/services/order.services.dart';
 import 'package:khardel/services/orderItem.services.dart';
 import 'package:khardel/services/supplement.services.dart';
-import 'package:khardel/views/Screens/orderDetails.dart';
 import 'package:khardel/views/shared/Appbar.dart';
 import 'package:khardel/views/shared/constant.dart';
 import 'package:khardel/views/widgets/ItemSup.dart';
@@ -21,16 +19,16 @@ import 'package:khardel/views/widgets/supplementsWidget.dart';
 
 import '../../Constant.dart';
 
-class Order extends StatefulWidget {
+class UpdateOrder extends StatefulWidget {
   final String id;
-  final orderId;
-  Order({this.id, this.orderId});
+
+  UpdateOrder({this.id});
 
   @override
-  _OrderState createState() => _OrderState();
+  _UpdateOrderState createState() => _UpdateOrderState();
 }
 
-class _OrderState extends State<Order> {
+class _UpdateOrderState extends State<UpdateOrder> {
   FoodsServices get foodService => GetIt.I<FoodsServices>();
   SupplementServices get categoryService => GetIt.I<SupplementServices>();
   OrderItemServices get orderItemService => GetIt.I<OrderItemServices>();
@@ -47,7 +45,6 @@ class _OrderState extends State<Order> {
   Food food = Food();
   String errorMessage;
   Color color = Colorbg;
-  OrderServices get orderServices => GetIt.I<OrderServices>();
 
   bool get isEditing => widget.id != null;
   int points = 0;
@@ -55,7 +52,6 @@ class _OrderState extends State<Order> {
 
   @override
   void initState() {
-    print(widget.orderId);
     _getFoodItem();
     super.initState();
   }
@@ -101,9 +97,8 @@ class _OrderState extends State<Order> {
                             // SizedBox(
                             //   width: x * 0.02,
                             // ),
-                            Text('نقاط' + points.toString(),
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
+                            Text('نقاط'+points.toString() ,
+                                style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold)),
                             // SizedBox(
                             //   width: x * 0.02,
                             // ),
@@ -119,11 +114,9 @@ class _OrderState extends State<Order> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(food.price + "شيكل",
+                              Text(food.price+"شيكل",
                                   style: TextStyle(
-                                      fontSize: 25,
-                                      color: ColorGold,
-                                      fontWeight: FontWeight.bold)),
+                                      fontSize: 25, color: ColorGold,fontWeight: FontWeight.bold)),
                               Text(food.title,
                                   style: TextStyle(
                                       fontSize: 24,
@@ -178,6 +171,7 @@ class _OrderState extends State<Order> {
                               ),
                               SuppWidget(
                                 listSelected: listSupplement,
+
                                 label: 'اضافات خضار',
                                 list: [
                                   "بندورة ",
@@ -199,6 +193,7 @@ class _OrderState extends State<Order> {
                               ),
                               SuppWidget(
                                 listSelected: listSupplement,
+
                                 label: 'اضافات اجبان',
                                 list: [
                                   "شرائح جبنة بيضاء",
@@ -245,13 +240,12 @@ class _OrderState extends State<Order> {
                             controller: otherController,
                             autofocus: false,
                             style: TextStyle(
-                              fontSize: 16.0,
-                            ),
+                              fontSize: 16.0,),
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
                               contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 40.0),
+                              const EdgeInsets.symmetric(vertical: 40.0),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
@@ -269,20 +263,19 @@ class _OrderState extends State<Order> {
                             init: AddToCartVM(),
                             builder: (value) => ElevatedButton(
                               onPressed: () {
-                                (widget.orderId == null)
-                                    ? value.add(CartItem(
-                                        orderItem: OrderItem(
-                                          userId: '60f89ad57ceda214d885fdb7',
-                                          supplements: listSupplement,
-                                          food: food.id,
-                                          other: otherController.text,
-                                          quantity: 3,
-                                        ),
-                                        foodPoints: food.points,
-                                        foodPrice: food.price,
-                                        foodTitle: food.title,
-                                      ))
-                                    : _addItem();
+                                value.add(CartItem(
+                                  orderItem: OrderItem(
+                                    userId: '60f89ad57ceda214d885fdb7',
+                                    supplements: listSupplement,
+                                    food: food.id,
+                                    other: otherController.text,
+                                    quantity: 3,
+                                  ),
+                                  foodPoints: food.points,
+                                  foodPrice: food.price,
+                                  foodTitle: food.title,
+
+                                ));
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Row(
@@ -291,12 +284,13 @@ class _OrderState extends State<Order> {
                                           Icons.thumb_up_alt_outlined,
                                           color: Colors.white,
                                         ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Expanded(child: Text('تم الطلب بنجاح'))
+                                        SizedBox(width: 20,),
+                                        Expanded(
+                                            child:Text('تم الطلب بنجاح')
+                                        )
                                       ],
                                     ),
+
                                   ),
                                 );
                               },
@@ -432,24 +426,21 @@ class _OrderState extends State<Order> {
   }
 
   _addItem() async {
-    setState(() {
-      _isLoading = true;
-    });
-    OrderItem orderItem = OrderItem(
-      supplements: listSupplement,
-      food: food.id,
-      other: otherController.text,
-      quantity: 3,
-    );
-
-    await orderServices
-        .addOrderItemToOrder(widget.orderId.toString(), orderItem)
-        .then((result){
-          print('taped');
-          Navigator.pop(context);
-    });
-    setState(() {
-      _isLoading = false;
-    });
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    // final item=OrderItem(
+    //  userId: '60f89ad57ceda214d885fdb7',
+    //     supplements: listSupplement,
+    //   food: food.id,
+    //   other:otherController.text ,
+    //   quantity: 3,
+    // );
+    // print(listSupplement);
+    // final result = await orderItemService.addOrderItem(item);
+    // print(result);
+    // setState(() {
+    //   _isLoading = false;
+    // });
   }
 }

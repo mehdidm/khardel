@@ -83,22 +83,26 @@ class OrderServices{
         APIResponse<bool>(error: true, errorMessage: 'An error occured'));
   }
 
-  Future<APIResponse> addOrderItemToOrder(String id,String itemId) {
+  addOrderItemToOrder(String id,OrderItem orderItem) {
     return client
         .post(
-      Uri.parse(API + '/addOrderItem/$id/$itemId'),
+      Uri.parse(API + '/add/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(orderItem.toJson())
     )
         .then((data) {
       if (data.statusCode == 200) {
         final jsonData = json.decode(data.body);
         return jsonData;
       }
-      return APIResponse(error: true, errorMessage: 'An error occured');
+      return 'An error occured';
     }).catchError((_) =>
-        APIResponse(error: true, errorMessage: 'An error occured'));
+        'An error occured');
   }
 
-  Future<APIResponse> deleteOrderItemFromOrder(String id,String itemId) {
+   deleteOrderItemFromOrder(String id,String itemId) {
     return client
         .post(
       Uri.parse(API + '/updateOrder/$id/$itemId'),
@@ -108,9 +112,9 @@ class OrderServices{
         final jsonData = json.decode(data.body);
         return jsonData;
       }
-      return APIResponse(error: true, errorMessage: 'An error occured');
+      return 'An error occured';
     }).catchError((_) =>
-        APIResponse(error: true, errorMessage: 'An error occured'));
+       'An error occured');
   }
 
 Future<APIResponse<bool>> updateOrder(String id,Order item) {
